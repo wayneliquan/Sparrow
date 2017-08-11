@@ -1,14 +1,14 @@
 buildscript {
-	ext {
-		springBootVersion = '1.5.6.RELEASE'
-	}
-	repositories {
-		mavenLocal()
-		mavenCentral()
-	}
-	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-	}
+    ext {
+        springBootVersion = '1.5.6.RELEASE'
+    }
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
 }
 
 apply plugin: 'java'
@@ -23,29 +23,40 @@ jar {
 sourceCompatibility = 1.8
 
 repositories {
-	mavenLocal()
-	maven {url 'http://maven.aliyun.com/nexus/content/repositories/central/'}
-	mavenCentral()
+    mavenLocal()
+    maven { url 'http://maven.aliyun.com/nexus/content/repositories/central/' }
+    mavenCentral()
 }
 
 
 dependencies {
-	compile('org.springframework.boot:spring-boot-starter-web')
-	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
-	runtime('org.springframework.boot:spring-boot-devtools')
+    compile('org.springframework.boot:spring-boot-starter')
+    compile('org.springframework.boot:spring-boot-starter-aop')
+    compile('org.springframework.boot:spring-boot-starter-web')
+    runtime('org.springframework.boot:spring-boot-devtools')
+    compile("org.springframework.boot:spring-boot-configuration-processor")
 
-	// spring-security
-	compile('org.springframework.boot:spring-boot-starter-security')
+    // Thymeleaf
+    compile("org.thymeleaf:thymeleaf:3.0.2.RELEASE")
+    compile("org.thymeleaf:thymeleaf-spring4:3.0.2.RELEASE")
+    compile("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:2.1.1")
 
-	// mybatis
-	compile('org.mybatis.spring.boot:mybatis-spring-boot-starter:1.3.0')
-	compile('com.alibaba:druid:1.1.2')
+    // spring-security
+    compile('org.springframework.boot:spring-boot-starter-security')
 
-	// DataBase
-	runtime('org.postgresql:postgresql')
+    // mybatis
+    compile('org.mybatis.spring.boot:mybatis-spring-boot-starter:1.3.0')
+    compile('com.alibaba:druid:1.1.2')
 
-	// lombok
-	compileOnly('org.projectlombok:lombok')
-	testCompile('org.springframework.boot:spring-boot-starter-test')
-	testCompile('org.springframework.security:spring-security-test')
+    // DataBase
+    runtime('org.postgresql:postgresql')
+
+    // lombok
+    compileOnly('org.projectlombok:lombok')
+
+    // json
+    compile('com.alibaba:fastjson:1.2.31')
+
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('org.springframework.security:spring-security-test')
 }

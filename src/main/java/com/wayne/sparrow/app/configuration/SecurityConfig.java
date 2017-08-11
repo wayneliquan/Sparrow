@@ -1,4 +1,4 @@
-package com.wayne.Sparrow.app.configuration;
+package com.wayne.sparrow.app.configuration;
 
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

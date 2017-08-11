@@ -1,12 +1,18 @@
+database:
+  address: localhost
+  port: 5432
+  user: devel
+  password: 123456
+  dbname: Sparrow
+
 spring:
-  # 数据源配置信息，配置类DatabaseConfiguration
-  # 参考： https://github.com/alibaba/druid/wiki/%E9%85%8D%E7%BD%AE_DruidDataSource%E5%8F%82%E8%80%83%E9%85%8D%E7%BD%AE
   datasource:
     # 基本属性
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://192.168.48.61:5432/OptimusPrimeIMS
-    username: devel
-    password: 123456
+    url: jdbc:postgresql://${database.address}:${database.port}/${database.dbname}
+    username: ${database.user}
+    password: ${database.password}
+    type: com.alibaba.druid.pool.DruidDataSource
 
     # 配置初始化大小，最大，最小
     initial-size: 5
@@ -25,3 +31,7 @@ spring:
     test-on-return: false
 
     config-location: mybatis-config.xml
+    mapper-path: mapper/**.xml
+
+server:
+  port: 9999

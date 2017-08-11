@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wayne.sparrow.app.mapper.system.SysRoleMapper">
+  <resultMap id="BaseResultMap" type="com.wayne.sparrow.app.entity.system.SysRole">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="weight" jdbcType="VARCHAR" property="weight" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="date_modify" jdbcType="TIMESTAMP" property="dateModify" />
+    <result column="date_created" jdbcType="TIMESTAMP" property="dateCreated" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, code, weight, type, date_modify, date_created
+  </sql>
+  <select id="findById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_role
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+</mapper>
