@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+  <contextName>Sparrow</contextName>
+  <property name="ROOT_LOG_FILE_PATH" value="log-web/brawn.root.log"/>
+  <property name="ROOT_LOG_FILE_ZIP_PATH" value="log-web/brawn.root.%i.log.zip"/>
+  <property name="NORMAL_LOG_FILE_PATH" value="log-web/normal/web.%d{yyyy-MM-dd}.log"/>
+  <!--<property name="PATTERN" value="%-5level [%thread] %-4relative %logger{35} - %msg%n"/>-->
+  <property name="PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} %-5level --- [%thread] %logger{36} : %msg%n"/>
+
+  <springProfile name="dev">
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>${PATTERN}</pattern>
+    </encoder>
+  </appender>
+  <root level="INFO">
+    <appender-ref ref="CONSOLE"/>
+  </root>
+  </springProfile>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+      <encoder>
+        <pattern>${PATTERN}</pattern>
+      </encoder>
+    </appender>
+    <root level="INFO">
+      <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>

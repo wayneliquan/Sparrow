@@ -31,7 +31,4 @@ spring:
     test-on-return: false
 
     config-location: mybatis-config.xml
-    mapper-path: mapper/**.xml
-
-server:
-  port: 9999
+    mapper-path: mapper/**/**.xml
