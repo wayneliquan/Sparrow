@@ -52,7 +52,7 @@ dependencies {
     runtime('org.postgresql:postgresql')
 
     // lombok
-    compileOnly('org.projectlombok:lombok')
+    compile('org.projectlombok:lombok')
 
     // json
     compile('com.alibaba:fastjson:1.2.31')
