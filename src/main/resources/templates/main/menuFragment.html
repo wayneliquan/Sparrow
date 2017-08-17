@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<section th:fragment="menu">
+	<ul>
+		<th:block th:each="subMenu : ${subMenuList}">
+			<li><span th:text="${subMenu.name}"></span>
+				<section th:insert="@{main/menuFragment} :: menu" th:with="subMenuList=${subMenu.subMenuList}">
+				</section>
+			</li>
+		</th:block>
+	</ul>
+</section>
+
+</html>
