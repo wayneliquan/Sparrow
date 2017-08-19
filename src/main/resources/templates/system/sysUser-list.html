@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" content="text/html; charset=utf-8" />
+  <title>用户列表</title>
+  <script type="text/javascript" src="../../static/js/jquery/jquery-3.2.1.min.js"
+          th:src="@{/js/jquery-3.2.1.min.js}"></script>
+  <!-- bootstrap -->
+  <link rel="stylesheet" href="../../static/css/bootstrap/bootstrap.min.css"
+        th:href="@{/css/bootstrap/bootstrap.min.css}" />
+</head>
+<body>
+<div>
+  <!-- title -->
+  <div>
+    <p class="text-center text-muted h2">用户列表</p>
+  </div>
+  <div>
+    <hr width="80%" />
+    <table th:if="${not #lists.isEmpty(sysUserList)}" class="table table-bordered text-center">
+      <thead style="background-color: #D0CACA">
+      <tr>
+        <th style='text-align: center;'>序号</th>
+        <th style='text-align: center;'>用户名</th>
+        <th style='text-align: center;'>用户昵称</th>
+        <th style='text-align: center;'>角色</th>
+        <th style='text-align: center;'>状态</th>
+
+        <th style='text-align: center; '>保存的时间</th>
+        <th style='text-align: center; '>操作</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="sysUser, stat:${sysUserList}">
+        <td th:text="${stat.index + 1}"></td>
+        <td th:text="${sysUser.username}"></td>
+        <td th:text="${sysUser.nickname}"></td>
+        <td th:text="${(sysUserRoleMap != null) ? sysUserRoleMap[sysUser.id] : ''}"></td>
+        <td th:text="${sysUser.status}"></td>
+
+        <td th:text="${#calendars.format(sysUser.dateCreated, 'yyyy-MM-dd HH:mm:ss')}"></td>
+        <td>
+          <div>
+            <a href='#' th:href="'/sysUser/grantRole?sysUserId=' + ${sysUser.id}">分配角色</a> |
+            <a href='#' th:href="'/sysUser/input?sysUserId=' + ${sysUser.id}">修改</a> |
+            <a href='#' th:onclick="'deleteById(' + ${sysUser.id} + '); return false;'">删除</a>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <p class="text-center" th:if="${#lists.isEmpty(sysUserList)}">没有数据!</p>
+  </div>
+</div>
+<script>
+    function deleteById(deleteById) {
+        var flag = confirm('确定删除该User?');
+        if (flag) {
+            var url ='/sysUser/deleteById?sysUserId=' + deleteById;
+            $.get(url, function (data) {
+                if (data) {
+                    alert(data.message);
+                    if (data.success) {
+                        window.location.reload();
+                    }
+                }
+            });
+        }
+    }
+</script>
+</body>
+</html>

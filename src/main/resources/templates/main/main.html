@@ -1,14 +1,93 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta charset="UTF-8"/>
-	<title>云雀管理系统</title>
+  <meta charset="UTF-8"/>
+  <title>云雀管理系统</title>
+
+  <script type="text/javascript" th:src="@{/js/jquery/jquery-3.2.1.min.js}"
+          src="../../static/js/jquery/jquery-3.2.1.min.js"></script>
+  <!-- bootstrap -->
+  <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}"
+        href="../../static/css/bootstrap/bootstrap.min.css"/>
+  <!-- bootstrap-treeview -->
+  <link rel="stylesheet" href="../../static/css/bootstrap-treeview/bootstrap-treeview.css"
+        th:href="@{/css/bootstrap-treeview/bootstrap-treeview.css}"/>
+
+  <script type="text/javascript" src="../../static/js/bootstrap-treeview/bootstrap-treeview.js"
+          th:src="@{/js/bootstrap-treeview/bootstrap-treeview.js}"></script>
+
 </head>
 <body>
-<div>
-	<section th:insert="@{main/menuFragment} :: menu" th:with="subMenuList=${menuNodeList}">
-
-	</section>
+<div class="container-fluid">
+  <!-- header -->
+  <div class="row-fluid" style="background-color: #2AABD2">
+    <div class="text-center">云雀管理系统</div>
+  </div>
+  <!-- center -->
+  <div style="margin-top: 10px">
+    <!-- center left -->
+    <div style="width: 240px; float: left; margin-right: 10px">
+      <div>
+        <div id="menuTree"></div>
+      </div>
+    </div>
+    <!-- center right -->
+    <div class="text-center" style="background-color: #4cae4c; overflow: hidden">
+      <script>
+          function setIframeHeight(iframe) {
+              if (iframe) {
+                  var iframeWin = iframe.contentWindow || iframe.contentDocument.parentWindow;
+                  if (iframeWin.document.body) {
+                      iframe.height = iframeWin.document.documentElement.scrollHeight || iframeWin.document.body.scrollHeight;
+                  }
+              }
+          };
+      </script>
+      <iframe style="width: 100%; display: none;" frameborder="0" scrolling="no" id="centerFrame"
+              onload="setIframeHeight(this)" src="">
+      </iframe>
+    </div>
+  </div>
+  <!-- footer -->
+  <nav class="navbar navbar-default navbar-fixed-bottom">
+    <div class="navbar-inner navbar-content-center" style="padding: 10px; margin: auto">
+      <div class="text-muted credit text-center">
+        &copy; 泉轲信息管理有限责任公司
+      </div>
+    </div>
+  </nav>
 </div>
+<script th:inline="javascript">
+    var menuTreeData = [[${menuTreeData}]];
+</script>
+<script>
+    function showCenterFrame(url) {
+        $("#centerFrame").show();
+        $("#centerFrame").attr("src", url);
+    }
+    function getTree() {
+        return menuTreeData;
+    }
+    function collapseAll() {
+        $('#menuTree').treeview('collapseAll', {silent: true});
+    }
+    function expandNode(tree, node) {
+        $('#menuTree').treeview('expandNode', [node.nodeId, {silent: tree}]);
+    }
+    var tree = $('#menuTree').treeview({
+        color: "#428bca",
+        expandIcon: 'glyphicon glyphicon-chevron-right',
+        collapseIcon: 'glyphicon glyphicon-chevron-down',
+        nodeIcon: 'glyphicon glyphicon-bookmark',
+        data: getTree(),
+        selectable: false,
+        onNodeSelected: function (event, node) {
+            console.log(event);
+            console.log(node);
+            showCenterFrame(node.href);
+            expandNode(this, node);
+        }
+    });
+</script>
 </body>
 </html>

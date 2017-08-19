@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" content="text/html; charset=utf-8" />
+  <title>系统用户输入</title>
+  <script type="text/javascript" src="../../static/js/jquery/jquery-3.2.1.min.js"
+          th:src="@{/js/jquery/jquery-3.2.1.min.js}"></script>
+  <!-- bootstrap -->
+  <link rel="stylesheet" href="../../static/css/bootstrap/bootstrap.min.css"
+        th:href="@{/css/bootstrap/bootstrap.min.css}" />
+</head>
+<body>
+<div>
+  <!-- title -->
+  <div>
+    <p class="text-center text-muted h2">系统用户输入</p>
+  </div>
+  <hr width="80%" />
+  <div class="container">
+    <form id="sysUserForm" method="post" class="form-horizontal" action="/sysUser/save">
+      <div class="form-group">
+        <label class="col-lg-3 control-label">用户名</label>
+        <div class="col-lg-5">
+          <input type="text" class="form-control" name="username" th:value="${sysUser?.username}"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-lg-3 control-label">密码</label>
+        <div class="col-lg-5">
+          <input type="password" class="form-control" name="password" th:value="${sysUser?.password}"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-lg-3 control-label">昵称</label>
+        <div class="col-lg-5">
+          <input type="text" class="form-control" name="nickname" th:value="${sysUser?.nickname}"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="" class="control-label col-md-3">状态</label>
+        <div class="radio col-md-2">
+          <label>
+            <input type="radio" name="status" value="0" th:checked="${((sysUser == null) or (sysUser.status == 0))} ?  checked" /> 启用
+          </label>
+        </div>
+        <div class="radio col-md-2">
+          <label>
+            <input type="radio" name="status" value="1" th:checked="${sysUser?.status == 1} ? checked" /> 删除
+          </label>
+        </div>
+        <div class="radio col-md-2">
+          <label>
+            <input type="radio" name="status" value="2" th:checked="${sysUser?.status == 2} ? checked" /> 冻结
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-lg-9 col-lg-offset-3">
+          <button type="submit" class="btn btn-primary">保 存</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>

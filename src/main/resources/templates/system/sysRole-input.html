@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" content="text/html; charset=utf-8" />
+  <title>系统角色输入</title>
+  <script type="text/javascript" src="../../static/js/jquery/jquery-3.2.1.min.js"
+          th:src="@{/js/jquery/jquery-3.2.1.min.js}"></script>
+  <!-- bootstrap -->
+  <link rel="stylesheet" href="../../static/css/bootstrap/bootstrap.min.css"
+        th:href="@{/css/bootstrap/bootstrap.min.css}" />
+</head>
+<body>
+<div>
+  <!-- title -->
+  <div>
+    <p class="text-center text-muted h2">系统角色输入</p>
+  </div>
+  <hr width="80%" />
+  <div class="container">
+    <form id="sysRoleForm" method="post" class="form-horizontal" action="/sysRole/save">
+      <div class="form-group">
+        <label class="col-lg-3 control-label">名称</label>
+        <div class="col-lg-5">
+          <input type="text" class="form-control" name="name" th:value="${sysRole?.name}"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-lg-3 control-label">CODE</label>
+        <div class="col-lg-5">
+          <input type="text" class="form-control" name="code" th:value="${sysRole?.code}"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-lg-3 control-label">weight</label>
+        <div class="col-lg-5">
+          <input type="text" class="form-control" name="weight" th:value="${sysRole?.weight}"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-lg-3 control-label">角色类型</label>
+        <div class="col-lg-5">
+          <select name="type" class="form-control">
+            <!--1: admin, 2: Operator, 3:manager, 4: user -->
+            <option value="1" th:selected="${sysRole?.type == 1}">Admin</option>
+            <option value="2" th:selected="${sysRole?.type == 2}">Operator</option>
+            <option value="3" th:selected="${sysRole?.type == 3}">Manager</option>
+            <option value="4" th:selected="${sysRole?.type == 4}">User</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-lg-9 col-lg-offset-3">
+          <button type="submit" class="btn btn-primary">保 存</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+    function deleteById(deleteById) {
+        var flag = confirm('确定删除该User?');
+        if (flag) {
+            var url ='/sysUser/deleteById?roleId=' + deleteById;
+            $.get(url, function (data) {
+                if (data) {
+                    alert(data.message);
+                    if (data.success) {
+                        window.location.reload();
+                    }
+                }
+            });
+        }
+    }
+</script>
+</body>
+</html>

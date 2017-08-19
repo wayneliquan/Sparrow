@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" content="text/html; charset=utf-8" />
+  <title>系统资源列表</title>
+  <script type="text/javascript" src="../../static/js/jquery/jquery-3.2.1.min.js"
+          th:src="@{/js/jquery/jquery-3.2.1.min.js}"></script>
+  <!-- bootstrap -->
+  <link rel="stylesheet" href="../../static/css/bootstrap/bootstrap.min.css"
+        th:href="@{/css/bootstrap/bootstrap.min.css}" />
+</head>
+<body>
+<div>
+  <!-- title -->
+  <div>
+    <p class="text-center text-muted h2">系统资源列表</p>
+  </div>
+  <div>
+    <hr width="80%" />
+    <table th:if="${not #lists.isEmpty(sysResourceList)}" class="table table-bordered text-center">
+      <thead style="background-color: #D0CACA">
+      <tr>
+        <th style='text-align: center;'>序号</th>
+        <th style='text-align: center;'>名称</th>
+        <th style='text-align: center;'>pid</th>
+        <th style='text-align: center;'>url</th>
+        <th style='text-align: center;'>icon</th>
+        <th style='text-align: center;'>权重</th>
+
+        <th style='text-align: center;'>资源编码</th>
+        <th style='text-align: center;'>资源的类型</th>
+        <th style='text-align: center;'>资源等级</th>
+        <th style='text-align: center;'>上级资源名称</th>
+
+        <th style='text-align: center;'>状态</th>
+        <th style='text-align: center;'>uniqueCode</th>
+        <th style='text-align: center; '>上次操作时间</th>
+        <th style='text-align: center; '>保存的时间</th>
+        <th style='text-align: center; '>操作</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="resource, stat:${sysResourceList}">
+        <td th:text="${stat.index + 1}"></td>
+        <td th:text="${resource.name}"></td>
+        <td th:text="${resource.pid}"></td>
+        <td th:text="${resource.url}"></td>
+        <td th:text="${resource.icon}"></td>
+        <td th:text="${resource.weight}"></td>
+
+        <td th:text="${resource.code}"></td>
+        <td th:text="${resource.type}"></td>
+        <td th:text="${resource.level}"></td>
+        <td th:text="${resource.pname}"></td>
+
+        <td th:text="${resource.status}"></td>
+        <td th:text="${resource.uniqueCode}"></td>
+        <td th:text="${resource.dateModify} ? ${#calendars.format(role.dateModify, 'yyyy-MM-dd HH:mm:ss')}"></td>
+        <td th:text="${#calendars.format(resource.dateCreated, 'yyyy-MM-dd HH:mm:ss')}"></td>
+        <td>
+          <div>
+            <a href='#' th:href="'/sysResource/input?userId=' + ${resource.id}">修改</a> |
+            <a href='#' th:onclick="'deleteById(' + ${resource.id} + '); return false;'">删除</a>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <p class="text-center" th:if="${#lists.isEmpty(sysResourceList)}">没有数据!</p>
+  </div>
+</div>
+<script>
+    function deleteById(deleteById) {
+        var flag = confirm('确定删除该User?');
+        if (flag) {
+            var url ='/sysResource/deleteById?resourceId=' + deleteById;
+            $.get(url, function (data) {
+                if (data) {
+                    alert(data.message);
+                    if (data.success) {
+                        window.location.reload();
+                    }
+                }
+            });
+        }
+    }
+</script>
+</body>
+</html>

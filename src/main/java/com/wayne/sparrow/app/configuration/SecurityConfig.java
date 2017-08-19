@@ -1,9 +1,16 @@
 package com.wayne.sparrow.app.configuration;
 
+import com.wayne.sparrow.app.configuration.security.LoginUserDetailsService;
+import com.wayne.sparrow.app.configuration.security.MyFilterSecurityInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
  * Created by Wayne on 2017/8/8.
@@ -12,8 +19,54 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @Configurable
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    private MyFilterSecurityInterceptor myFilterSecurityInterceptor;
+
+    /**
+     * 配置登录有关的权限, 标示某个用户有某些角色
+     * @param auth
+     * @throws Exception
+     */
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.inMemoryAuthentication().withUser("user").password("123").roles("USER");
+        auth.userDetailsService(new LoginUserDetailsService());
+//        auth.inMemoryAuthentication().withUser("admin").password("123").roles("USER", "ADMIN");
+    }
+
+    /**
+     * 这里是授权的配置
+     * @param http
+     * @throws Exception
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/main").permitAll();
+        // 添加自定义的权限过滤器到spring-security的过滤器链中
+        http.authorizeRequests().antMatchers("/login").permitAll();
+        http.authorizeRequests().antMatchers("/error").permitAll();
+        http.authorizeRequests().antMatchers("/logout").permitAll();
+
+//        http.authorizeRequests().antMatchers("/test/home").hasRole("USER");
+        // 下面两种配置等价
+//        http.authorizeRequests().antMatchers("/admin").hasRole("ADMIN");
+//        http.authorizeRequests().antMatchers("/test/admin").access("hasRole('ROLE_ADMIN')"); //基于表达式的写法
+        ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry = http.authorizeRequests();
+        registry.antMatchers("/test/admin").hasRole("ADMIN");
+
+        http.headers().frameOptions().sameOrigin();
+
+        http.authorizeRequests().antMatchers("/**/*.html").permitAll();
+        http.authorizeRequests().antMatchers("/**/*.js").access("permitAll"); //基于表达式的写法
+        http.authorizeRequests().antMatchers("/**/*.css").permitAll();
+        http.authorizeRequests().antMatchers("/**/*.css.map").permitAll();
+
+//        http.authorizeRequests().antMatchers("/**").access("authenticated");
+//        http.formLogin();
+        http.formLogin().loginPage("/login");
+        http.csrf().disable();
+        http.rememberMe().key("Snarl");
+        http.logout().logoutSuccessUrl("/login").logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
+
+        http.addFilterBefore(myFilterSecurityInterceptor, FilterSecurityInterceptor.class);
     }
 }

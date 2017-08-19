@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" content="text/html; charset=utf-8" />
+  <title>系统资源输入</title>
+  <script type="text/javascript" src="../../static/js/jquery/jquery-3.2.1.min.js"
+          th:src="@{/js/jquery/jquery-3.2.1.min.js}"></script>
+  <!-- bootstrap -->
+  <link rel="stylesheet" href="../../static/css/bootstrap/bootstrap.min.css"
+        th:href="@{/css/bootstrap/bootstrap.min.css}" />
+</head>
+<body>
+<div>
+  <!-- title -->
+  <div>
+    <p class="text-center text-muted h2">系统资源输入</p>
+  </div>
+  <hr width="80%" />
+  <div class="container">
+    <form id="sysResourceForm" method="post" class="form-horizontal" action="/sysResource/save">
+      <div class="form-group">
+        <label class="col-lg-3 control-label">资源名称</label>
+        <div class="col-lg-5">
+          <input type="text" class="form-control" name="name" th:value="${sysResource?.name}"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-lg-3 control-label">资源URL</label>
+        <div class="col-lg-5">
+          <input type="text" class="form-control" name="url" th:value="${sysResource?.url}"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-lg-3 control-label">上级资源</label>
+        <div class="col-lg-5">
+          <input type="text" class="form-control" name="pid" th:value="${sysResource?.pid}"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="type" class="control-label col-lg-3">资源类型:<span class="non-empty">*</span></label>
+        <div class="col-lg-5">
+          <select name="type" id="type" class="form-control">
+            <option value="" style="display:none">请选择</option>
+            <option value="1" th:selected="${sysResource?.type == 1} ? selected">菜单</option>
+            <option value="2" th:selected="${sysResource?.type == 2} ? selected">功能点</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-lg-3 control-label">weight</label>
+        <div class="col-lg-5">
+          <input type="text" class="form-control" name="weight" th:value="${sysResource?.weight}"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-lg-3 control-label">资源编码</label>
+        <div class="col-lg-5">
+          <input type="text" class="form-control" name="code" th:value="${sysResource?.code}"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="" class="control-label col-md-3">状态:<span class="red">*</span></label>
+        <div class="radio col-md-2">
+          <label>
+            <input type="radio" name="status" value="0" th:checked="${((sysResource == null) or (sysResource.status == 0))} ?  checked" /> 启用
+          </label>
+        </div>
+        <div class="radio col-md-2">
+          <label>
+            <input type="radio" name="status" value="1" th:checked="${sysResource?.status == 1} ? checked" /> 禁用
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-lg-9 col-lg-offset-3">
+          <button type="submit" class="btn btn-primary">保 存</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>

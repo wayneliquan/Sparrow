@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" content="text/html; charset=utf-8" />
+  <title>系统角色列表</title>
+  <script type="text/javascript" src="../../static/js/jquery/jquery-3.2.1.min.js"
+          th:src="@{/js/jquery/jquery-3.2.1.min.js}"></script>
+  <!-- bootstrap -->
+  <link rel="stylesheet" href="../../static/css/bootstrap/bootstrap.min.css"
+        th:href="@{/css/bootstrap/bootstrap.min.css}" />
+</head>
+<body>
+<div>
+  <!-- title -->
+  <div>
+    <p class="text-center text-muted h2">系统角色列表</p>
+  </div>
+  <div>
+    <hr width="80%" />
+    <table th:if="${not #lists.isEmpty(sysRoleList)}" class="table table-bordered text-center">
+      <thead style="background-color: #D0CACA">
+      <tr>
+        <th style='text-align: center;'>序号</th>
+        <th style='text-align: center;'>名称</th>
+        <th style='text-align: center;'>CODE</th>
+        <th style='text-align: center;'>weight</th>
+        <th style='text-align: center;'>类型</th>
+
+        <th style='text-align: center; '>上次修改时间</th>
+        <th style='text-align: center; '>保存的时间</th>
+        <th style='text-align: center; '>操作</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="role, stat:${sysRoleList}">
+        <td th:text="${stat.index + 1}"></td>
+        <td th:text="${role.name}"></td>
+        <td th:text="${role.code}"></td>
+        <td th:text="${role.weight}"></td>
+        <td th:text="${role.type}"></td>
+        <td th:text="${role.dateModify} ? ${#calendars.format(role.dateModify, 'yyyy-MM-dd HH:mm:ss')}"></td>
+        <td th:text="${#calendars.format(role.dateCreated, 'yyyy-MM-dd HH:mm:ss')}"></td>
+        <td>
+          <div>
+            <a href='#' th:href="'/sysRole/authorization?sysRoleId=' + ${role.id}">授权</a> |
+            <a href='#' th:href="'/sysRole/input?sysRoleId=' + ${role.id}">修改</a> |
+            <a href='#' th:onclick="'deleteById(' + ${role.id} + '); return false;'">删除</a>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <p class="text-center" th:if="${#lists.isEmpty(sysRoleList)}">没有数据!</p>
+  </div>
+</div>
+<script>
+    function deleteById(deleteById) {
+        var flag = confirm('确定删除该User?');
+        if (flag) {
+            var url ='/sysRole/deleteById?roleId=' + deleteById;
+            $.get(url, function (data) {
+                if (data) {
+                    alert(data.message);
+                    if (data.success) {
+                        window.location.reload();
+                    }
+                }
+            });
+        }
+    }
+</script>
+</body>
+</html>

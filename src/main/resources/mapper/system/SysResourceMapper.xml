@@ -2,23 +2,69 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wayne.sparrow.app.mapper.system.SysResourceMapper">
   <resultMap id="BaseResultMap" type="com.wayne.sparrow.app.entity.system.SysResource">
-    <id column="id" jdbcType="BIGINT" property="id" />
+    <id column="sys_resource_id" jdbcType="BIGINT" property="id" />
     <result column="pid" jdbcType="BIGINT" property="pid" />
     <result column="url" jdbcType="VARCHAR" property="url" />
     <result column="icon" jdbcType="VARCHAR" property="icon" />
     <result column="weight" jdbcType="VARCHAR" property="weight" />
-    <result column="unique_code" jdbcType="VARCHAR" property="uniqueCode" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="level" jdbcType="INTEGER" property="level" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="pname" jdbcType="VARCHAR" property="pname" />
     <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="unique_code" jdbcType="VARCHAR" property="uniqueCode" />
     <result column="date_modify" jdbcType="TIMESTAMP" property="dateModify" />
     <result column="date_created" jdbcType="TIMESTAMP" property="dateCreated" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, pid, url, icon, weight, unique_code, status, date_modify, date_created
+    sys_resource.id as sys_resource_id,
+    sys_resource.pid,
+    sys_resource.url,
+    sys_resource.icon,
+    sys_resource.weight,
+    sys_resource.code,
+    sys_resource.type,
+    sys_resource.level,
+    sys_resource.name,
+    sys_resource.pname,
+    sys_resource.status,
+    sys_resource.unique_code,
+    sys_resource.date_modify,
+    sys_resource.date_created
   </sql>
   <select id="findById" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from sys_resource
     where id = #{id,jdbcType=BIGINT}
   </select>
+
+  <select id="listAll" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sys_resource
+  </select>
+
+  <insert id="insert" parameterType="com.wayne.sparrow.app.entity.system.SysResource">
+    INSERT INTO sys_resource(
+    pid, url, icon, weight, code, type, level, name, pname, status, unique_code,
+    date_modify, date_created
+    ) VALUES (
+    #{pid}, #{url}, #{icon}, #{weight},
+    #{code},#{type}, #{level}, #{name}, #{pname},
+    #{status},#{uniqueCode},#{dateModify}, #{dateCreated}
+    )
+  </insert>
+
+  <select id="findByIds" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sys_resource
+    where id in
+    <foreach collection="resourceIds" index="index" item="item" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+  </select>
+
 </mapper>

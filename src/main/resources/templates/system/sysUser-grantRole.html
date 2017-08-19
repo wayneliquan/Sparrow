@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" content="text/html; charset=utf-8"/>
+  <title>分配角色</title>
+  <script type="text/javascript" src="../../static/js/jquery/jquery-3.2.1.min.js"
+          th:src="@{/js/jquery/jquery-3.2.1.min.js}"></script>
+  <!-- bootstrap -->
+  <link rel="stylesheet" href="../../static/css/bootstrap/bootstrap.min.css"
+        th:href="@{/css/bootstrap/bootstrap.min.css}"/>
+  <link rel="stylesheet" href="../../static/css/bootstrap-treeview/bootstrap-treeview.css"
+        th:href="@{/css/bootstrap-treeview/bootstrap-treeview.css}"/>
+
+  <script type="text/javascript" src="../../static/js/bootstrap-treeview/bootstrap-treeview.js"
+          th:src="@{/js/bootstrap-treeview/bootstrap-treeview.js}"></script>
+</head>
+<body>
+<div>
+  <!-- title -->
+  <div>
+    <p class="text-center text-muted h2">分配角色</p>
+  </div>
+  <div class="container">
+    <hr width="80%"/>
+    <div id="tree" class="col-lg-4"></div>
+    <div style="clear:both"></div>
+    <div class="col-lg-4">
+      <input id="sysUserId" type="hidden" th:value="${sysUserId}"/>
+      <button class="btn btn-info col-lg-2" id="getChecked">确 定</button>
+      <button class="btn btn-default col-lg-offset-1 col-lg-2" id="cancel">取 消</button>
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src="../../static/js/bootstrap-treeview/mytree-extend.js"
+        th:src="@{/js/bootstrap-treeview/mytree-extend.js}"></script>
+<script th:inline="javascript">
+    var roleData = [[${roleData}]];
+</script>
+<script>
+    function getTree() {
+        return roleData;
+    }
+    var tree = $('#tree').treeview({
+        color: "#428bca",
+        expandIcon: 'glyphicon glyphicon-chevron-right',
+        collapseIcon: 'glyphicon glyphicon-chevron-down',
+        nodeIcon: 'glyphicon glyphicon-bookmark',
+        showIcon: false,
+        showCheckbox: true,
+        showBorder: false,
+        data: getTree(),
+        onNodeChecked: nodeChecked,
+        onNodeUnchecked: nodeUnchecked
+    });
+    $("#getChecked").click(function () {
+        var nodes = tree.treeview('getChecked');
+        var params = {};
+        var roleIds = [];
+        for (var i in nodes) {
+            console.log(nodes[i]);
+            roleIds[i] = nodes[i].id;
+        }
+        params["sysUserId"] = $("#sysUserId").val();
+        params["sysRoleIds"] = roleIds.join(",");
+        var url = "/sysUser/grant";
+        console.log(params);
+        $.post(url, params, function (result) {
+            if (result) {
+                alert(result.message);
+            }
+        });
+    });
+</script>
+</body>
+</html>

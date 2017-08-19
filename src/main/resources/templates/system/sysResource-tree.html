@@ -1,0 +1,232 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" content="text/html; charset=utf-8"/>
+  <title>系统资源树</title>
+  <script type="text/javascript" src="../../static/js/jquery/jquery-3.2.1.min.js"
+          th:src="@{/js/jquery/jquery-3.2.1.min.js}"></script>
+  <!-- bootstrap -->
+  <link rel="stylesheet" href="../../static/css/bootstrap/bootstrap.min.css"
+        th:href="@{/css/bootstrap/bootstrap.min.css}"/>
+  <link rel="stylesheet" href="../../static/css/bootstrap-treeview/bootstrap-treeview.css"
+        th:href="@{/css/bootstrap-treeview/bootstrap-treeview.css}"/>
+
+  <script type="text/javascript" src="../../static/js/bootstrap-treeview/bootstrap-treeview.js"
+          th:src="@{/js/bootstrap-treeview/bootstrap-treeview.js}"></script>
+
+  <style>
+    ul {
+      width: 100%;
+      display: table;
+      table-layout: fixed; /* optional */
+    }
+
+    ul li {
+      display: table-cell;
+      width: auto;
+      text-align: center;
+    }
+  </style>
+
+</head>
+<body>
+<div>
+  <!-- title -->
+  <div>
+    <p class="text-center text-muted h2">系统资源树</p>
+  </div>
+  <div class="container-fluid">
+    <hr width="80%"/>
+
+    <div id="tree" class="col-lg-offset-4 col-lg-3"></div>
+
+    <!--<p class="text-center" th:if="${#lists.isEmpty(sysResourceNodeTree)}">没有数据!</p>-->
+  </div>
+  <div id="info_main">
+    <ul>
+      <li>时间：2017-12-12</li>
+      <li>来源：field.source</li>
+      <li>作者：field.writer</li>
+    </ul>
+  </div>
+  <div>
+    <ul>
+      <li>fdafdafdafdafdaf</li>
+      <li>智方3000+商业进销存系列</li>
+      <li>智方3000+商业进销存系列</li>
+      <li>智方3000+商业进销存系列</li>
+      <li>智方3000+商业进销存系列</li>
+      <li>智方3000+商业进销存系列</li>
+      <li>智方3000+商业进销存系列fdafdaf</li>
+    </ul>
+  </div>
+</div>
+<button class="btn btn-default" id="getChecked">选择全部</button>
+<script>
+    function getChildNodeIdArr(node) {
+        var ts = [];
+        if (node.nodes) {
+            for (x in node.nodes) {
+                ts.push(node.nodes[x].nodeId);
+                if (node.nodes[x].nodes) {
+                    var getNodeDieDai = getChildNodeIdArr(node.nodes[x]);
+                    for (j in getNodeDieDai) {
+                        ts.push(getNodeDieDai[j]);
+                    }
+                }
+            }
+        } else {
+            ts.push(node.nodeId);
+        }
+        return ts;
+    }
+
+    function setParentNodeCheck(node) {
+        var parentNode = $("#treeview-checkable").treeview("getNode", node.parentId);
+        if (parentNode.nodes) {
+            var checkedCount = 0;
+            for (x in parentNode.nodes) {
+                if (parentNode.nodes[x].state.checked) {
+                    checkedCount++;
+                } else {
+                    break;
+                }
+            }
+            if (checkedCount === parentNode.nodes.length) {
+                $("#treeview-checkable").treeview("checkNode", parentNode.nodeId);
+                setParentNodeCheck(parentNode);
+            }
+        }
+    }
+    /**
+     * onNodeChecked: function (event, node) { //选中节点
+            var selectNodes = getChildNodeIdArr(node); //获取所有子节点
+            if (selectNodes) { //子节点不为空，则选中所有子节点
+                $('#treeview-checkable').treeview('checkNode', [selectNodes, {silent: true}]);
+            }
+            var parentNode = $("#treeview-checkable").treeview("getNode", node.parentId);
+            setParentNodeCheck(node);
+        },
+     onNodeUnchecked: function (event, node) { //取消选中节点
+            var selectNodes = getChildNodeIdArr(node); //获取所有子节点
+            if (selectNodes) { //子节点不为空，则取消选中所有子节点
+                $('#treeview-checkable').treeview('uncheckNode', [selectNodes, {silent: true}]);
+            }
+        },
+     onNodeExpanded: function (event, data) {
+            if (data.nodes === undefined || data.nodes === null) {
+
+            } else if (data.tags[0] === "2") {
+                alert("Tags 2");
+            } else {
+                alert("1111");
+            }
+        }
+     */
+</script>
+<script type="text/javascript" src="../../static/js/bootstrap-treeview/mytree-extend.js"
+        th:src="@{/js/bootstrap-treeview/mytree-extend.js}"></script>
+<script th:inline="javascript">
+    var resourceData = [[${resourceData}]];
+</script>
+<script>
+    var data = [
+        {
+            text: 'Parent 1',
+            href: '#parent1',
+            tags: ['4'],
+            id: 1,
+            pid: 0,
+            nodes: [
+                {
+                    text: 'Child 1',
+                    href: '#child1',
+                    tags: ['2'],
+                    id: 2,
+                    pid: 1,
+                    nodes: [
+                        {
+                            text: 'Grandchild 1',
+                            href: '#grandchild1',
+                            id: 3,
+                            pid: 2,
+                            tags: ['0'],
+                            state: {
+                                checked: true,
+                                expanded: true,
+                                selected: true
+                            },
+                        },
+                        {
+                            text: 'Grandchild 2',
+                            href: '#grandchild2',
+                            id: 4,
+                            pid: 2,
+                            tags: ['0']
+                        }
+                    ]
+                },
+                {
+                    text: 'Child 2',
+                    href: '#child2',
+                    id: 5,
+                    pid: 1,
+                    tags: ['0']
+                }
+            ]
+        },
+        {
+            text: 'Parent 2',
+            href: '#parent2',
+            id: 6,
+            pid: 0,
+            tags: ['0']
+        },
+        {
+            text: 'Parent 3',
+            href: '#parent3',
+            tags: ['0']
+        },
+        {
+            text: 'Parent 4',
+            href: '#parent4',
+            tags: ['0']
+        },
+        {
+            text: 'Parent 5',
+            href: '#parent5',
+            tags: ['0']
+        }
+    ];
+    function getTree() {
+        return resourceData;
+    }
+    var tree = $('#tree').treeview({
+//        color: "#428bca",
+//        expandIcon: 'glyphicon glyphicon-chevron-right',
+//        collapseIcon: 'glyphicon glyphicon-chevron-down',
+//        nodeIcon: 'glyphicon glyphicon-bookmark',
+        showIcon: false,
+        showCheckbox: true,
+        showBorder: false,
+        data: getTree(),
+        onNodeChecked: nodeChecked,
+        onNodeUnchecked: nodeUnchecked,
+        onNodeSelected: function (event, node) {
+            console.log(node);
+            console.log(this);
+            console.dir($('#tree').treeview('getChecked'));
+//            console.($('#tree').treeview.getChecked());
+        }
+    });
+    $("#getChecked").click(function () {
+        console.log("comeon");
+        var nodes = tree.treeview('getChecked');
+        console.log(nodes);
+        for (var i in nodes) {
+            console.log(nodes[i]);
+        }
+    });
+</script>
+</body>
+</html>

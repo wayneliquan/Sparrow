@@ -1,13 +1,17 @@
 package com.wayne.sparrow.app.controller.main;
 
+import com.alibaba.fastjson.JSON;
+import com.wayne.sparrow.app.entity.system.SysResource;
+import com.wayne.sparrow.app.service.system.SysUserService;
+import com.wayne.sparrow.app.vo.EntityToVO;
 import com.wayne.sparrow.app.vo.MenuNode;
 import com.wayne.sparrow.core.common.controller.BaseController;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,32 +21,25 @@ import java.util.List;
 @Slf4j
 public class MainController extends BaseController {
 
+    @Autowired
+    private SysUserService sysUserService;
+
     @Override
-    public String getModel() {
+    public String getModulePath() {
         return "main";
     }
 
     @GetMapping("/main")
     public String main(Model model) {
-        int top = 5;
-        int sub = 5;
-        int subsub = 5;
-        List<MenuNode> menuNodeList = new ArrayList<>();
-        while (top-- > 0) {
-            MenuNode menuNode = new MenuNode("top"+top);
-            menuNodeList.add(menuNode);
-            while (sub-- >0) {
-                MenuNode subMenuNode = new MenuNode("sub"+sub);
-                menuNode.addSubMenu(subMenuNode);
-                while (subsub-- > 0 ) {
-                    MenuNode subsubMenuNode = new MenuNode("subsub"+sub);
-                    subMenuNode.addSubMenu(subsubMenuNode);
-                }
-            }
-        }
-        System.out.println(menuNodeList);
-        model.addAttribute("menuNodeList", menuNodeList);
-        log.info("come on");
-        return getModel() + "/main";
+        List<SysResource> sysResourceList = sysUserService.listCurrentUserResource();
+        List<MenuNode> menuNodeList = EntityToVO.resourceToMenuNode(sysResourceList);
+        String menuTreeData = JSON.toJSONString(menuNodeList);
+        model.addAttribute("menuTreeData", menuTreeData);
+        return "main/main";
+    }
+
+    @GetMapping("/")
+    public String index(Model model) {
+        return "redirect:/sysUser/list";
     }
 }

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wayne.sparrow.app.mapper.system.SysRoleMapper">
   <resultMap id="BaseResultMap" type="com.wayne.sparrow.app.entity.system.SysRole">
-    <id column="id" jdbcType="BIGINT" property="id" />
+    <id column="role_id" jdbcType="BIGINT" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="code" jdbcType="VARCHAR" property="code" />
     <result column="weight" jdbcType="VARCHAR" property="weight" />
@@ -11,12 +11,49 @@
     <result column="date_created" jdbcType="TIMESTAMP" property="dateCreated" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, name, code, weight, type, date_modify, date_created
+    sys_role.id as role_id,
+    sys_role.name,
+    sys_role.code,
+    sys_role.weight,
+    sys_role.type,
+    sys_role.date_modify,
+    sys_role.date_created
   </sql>
   <select id="findById" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from sys_role
     where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="listAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sys_role
+  </select>
+
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO sys_role(
+    name, code, weight, type, date_modify, date_created
+    ) VALUES (
+    #{name}, #{code}, #{weight}, #{type}, #{dateModify}, #{dateCreated}
+    )
+  </insert>
+
+  <!--<update id="update" parameterType="com.weiqing.snarl.app.entity.system.SysRole">-->
+  <!--UPDATE sys_role-->
+  <!--<trim prefix="set" suffixOverrides=",">-->
+  <!--<if test="name != null"></if>      name = , code, weight, type, date_modify, date_created-->
+  <!--</trim>-->
+  <!--</update>-->
+
+  <select id="findByIds" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sys_role
+    where id in
+    <foreach collection="ids" index="index" item="item" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
   </select>
 </mapper>
