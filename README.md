@@ -7,5 +7,13 @@
 - 权限控制
 - 资源配置
 
+# 使用的前端框架版本：
+ - jquery: 3.2.1
+ - jquery.form: 4.2.2
+ - jquery.validate: 1.17.0
+ - bootstrap: 3.3.7
+ - bootstrap-datetimepicker: 1.7.1
+ - bootstrap-treeview: 1.2.0
+
 # 用途：
   - ERP后台系统
