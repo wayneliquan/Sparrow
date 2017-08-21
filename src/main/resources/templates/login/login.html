@@ -10,7 +10,7 @@
   <script type="text/javascript" src="../../static/js/jquery/jquery.validate.min.js" th:src="@{/js/jquery/jquery.validate.min.js}"></script>
   <script type="text/javascript" src="../../static/js/jquery/jquery.form.min.js" th:src="@{/js/jquery/jquery.form.min.js}"></script>
   <script type="text/javascript" src="../../static/js/bootstrap/bootstrap.min.js" th:src="@{/js/bootstrap/bootstrap.min.js}"></script>
-
+  <script src="//cdn.bootcss.com/blueimp-md5/2.8.0/js/md5.js"></script>
 </head>
 <body>
 <div class="container">
@@ -47,12 +47,16 @@
     $("form").validate({
         submitHandler: function(form) {
             alert("come on");
-            $(form).ajaxSubmit({
-                success: function (msg) {
-                    alert(msg.message);
-                    $("form")[0].reset();
-                }
-            });
+            var password = $("#password").val();
+            console.log(md5(password));
+            $("#password").val(md5(password));
+//            $(form).ajaxSubmit({
+//                success: function (msg) {
+//                    alert(msg.message);
+//                    $("form")[0].reset();
+//                }
+//            });
+            form.submit();
         },
         rules:{
             username: "required",

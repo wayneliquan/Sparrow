@@ -37,9 +37,4 @@ public class MainController extends BaseController {
         model.addAttribute("menuTreeData", menuTreeData);
         return "main/main";
     }
-
-    @GetMapping("/")
-    public String index(Model model) {
-        return "redirect:/sysUser/list";
-    }
 }

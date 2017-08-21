@@ -46,15 +46,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/error").permitAll();
         http.authorizeRequests().antMatchers("/logout").permitAll();
 
-//        http.authorizeRequests().antMatchers("/test/home").hasRole("USER");
-        // 下面两种配置等价
-//        http.authorizeRequests().antMatchers("/admin").hasRole("ADMIN");
+        http.authorizeRequests().antMatchers("/admin").hasRole("ADMIN");
 //        http.authorizeRequests().antMatchers("/test/admin").access("hasRole('ROLE_ADMIN')"); //基于表达式的写法
-        ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry = http.authorizeRequests();
-        registry.antMatchers("/test/admin").hasRole("ADMIN");
+//        ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry = http.authorizeRequests();
+//        registry.antMatchers("/test/admin").hasRole("ADMIN");
+//        registry.antMatchers("/test/home").hasRole("USER");
 
+        // 允许在iframe里面显示
         http.headers().frameOptions().sameOrigin();
 
+        // 在配置myFilterSecurityInterceptor之后就不起作用喽，原因待查
         http.authorizeRequests().antMatchers("/**/*.html").permitAll();
         http.authorizeRequests().antMatchers("/**/*.js").access("permitAll"); //基于表达式的写法
         http.authorizeRequests().antMatchers("/**/*.css").permitAll();
