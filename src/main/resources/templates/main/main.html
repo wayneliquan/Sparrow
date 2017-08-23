@@ -20,8 +20,8 @@
 <body>
 <div class="container-fluid">
   <!-- header -->
-  <div class="row-fluid" style="background-color: #2AABD2">
-    <div class="text-center">云雀管理系统</div>
+  <div class="row-fluid" style="background-color: #2AABD2; min-height: 100px; overflow: hidden;">
+    <div class="text-center h2">云雀管理系统</div>
   </div>
   <!-- center -->
   <div style="margin-top: 10px">
@@ -32,7 +32,7 @@
       </div>
     </div>
     <!-- center right -->
-    <div class="text-center" style="background-color: #4cae4c; overflow: hidden">
+    <div class="text-center" style="overflow: hidden">
       <script>
           function setIframeHeight(iframe) {
               if (iframe) {
@@ -41,7 +41,7 @@
                       iframe.height = iframeWin.document.documentElement.scrollHeight || iframeWin.document.body.scrollHeight;
                   }
               }
-          };
+          }
       </script>
       <iframe style="width: 100%; display: none;" frameborder="0" scrolling="no" id="centerFrame"
               onload="setIframeHeight(this)" src="">

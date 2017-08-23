@@ -8,7 +8,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -29,9 +28,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.inMemoryAuthentication().withUser("user").password("123").roles("USER");
         auth.userDetailsService(new LoginUserDetailsService());
-//        auth.inMemoryAuthentication().withUser("admin").password("123").roles("USER", "ADMIN");
+//        auth.inMemoryAuthentication().withUser("user").password("123").roles("USER");
+//        auth.inMemoryAuthentication().withUser("admin").password("123").roles("USER", "SYS_ADMIN");
     }
 
     /**
@@ -48,12 +47,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/logout").permitAll();
 
         // for test
-        http.authorizeRequests().antMatchers("/test/admin").hasRole("ADMIN");
+        http.authorizeRequests().antMatchers("/test/admin").hasRole("SYS_ADMIN");
         http.authorizeRequests().antMatchers("/test/home").access("hasRole('ROLE_USER')"); //基于表达式的写法
 
-        // 在配置myFilterSecurityInterceptor之后就不起作用喽，原因待查,
-        // 需要myFilterSecurityInterceptor.setAuthenticationManager()配置authenticationManager, 例如:
-        //     myFilterSecurityInterceptor.setAuthenticationManager(authenticationManager());
+        // 在配置myFilterSecurityInterceptor之后就不起作用喽，原因: FilterSecurityInterceptor 默认只会执行一次
+        //     myFilterSecurityInterceptor.setObserveOncePerRequest(false);
         http.authorizeRequests().antMatchers("/**/*.html").permitAll();
         http.authorizeRequests().antMatchers("/**/*.js").access("permitAll"); //基于表达式的写法
         http.authorizeRequests().antMatchers("/**/*.css").permitAll();
@@ -68,8 +66,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.rememberMe().key("Sparrow");
         http.logout().logoutSuccessUrl("/login").logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
-
-        myFilterSecurityInterceptor.setAuthenticationManager(authenticationManager());
-        http.addFilterBefore(myFilterSecurityInterceptor, FilterSecurityInterceptor.class);
+        myFilterSecurityInterceptor.setObserveOncePerRequest(false);
+        myFilterSecurityInterceptor.setAuthenticationManager(authenticationManagerBean());
+        http.addFilterAfter(myFilterSecurityInterceptor, FilterSecurityInterceptor.class);
     }
+
 }
