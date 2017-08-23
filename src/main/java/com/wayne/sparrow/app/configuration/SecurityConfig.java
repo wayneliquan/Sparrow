@@ -42,32 +42,34 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // 添加自定义的权限过滤器到spring-security的过滤器链中
+        http.authorizeRequests().antMatchers("/main").authenticated();
         http.authorizeRequests().antMatchers("/login").permitAll();
         http.authorizeRequests().antMatchers("/error").permitAll();
         http.authorizeRequests().antMatchers("/logout").permitAll();
 
-        http.authorizeRequests().antMatchers("/admin").hasRole("ADMIN");
-//        http.authorizeRequests().antMatchers("/test/admin").access("hasRole('ROLE_ADMIN')"); //基于表达式的写法
-//        ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry = http.authorizeRequests();
-//        registry.antMatchers("/test/admin").hasRole("ADMIN");
-//        registry.antMatchers("/test/home").hasRole("USER");
+        // for test
+        http.authorizeRequests().antMatchers("/test/admin").hasRole("ADMIN");
+        http.authorizeRequests().antMatchers("/test/home").access("hasRole('ROLE_USER')"); //基于表达式的写法
 
-        // 允许在iframe里面显示
-        http.headers().frameOptions().sameOrigin();
-
-        // 在配置myFilterSecurityInterceptor之后就不起作用喽，原因待查
+        // 在配置myFilterSecurityInterceptor之后就不起作用喽，原因待查,
+        // 需要myFilterSecurityInterceptor.setAuthenticationManager()配置authenticationManager, 例如:
+        //     myFilterSecurityInterceptor.setAuthenticationManager(authenticationManager());
         http.authorizeRequests().antMatchers("/**/*.html").permitAll();
         http.authorizeRequests().antMatchers("/**/*.js").access("permitAll"); //基于表达式的写法
         http.authorizeRequests().antMatchers("/**/*.css").permitAll();
         http.authorizeRequests().antMatchers("/**/*.css.map").permitAll();
 
+        // 允许在iframe里面显示
+        http.headers().frameOptions().sameOrigin();
+
 //        http.authorizeRequests().antMatchers("/**").access("authenticated");
 //        http.formLogin();
         http.formLogin().loginPage("/login");
         http.csrf().disable();
-        http.rememberMe().key("Snarl");
+        http.rememberMe().key("Sparrow");
         http.logout().logoutSuccessUrl("/login").logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
 
+        myFilterSecurityInterceptor.setAuthenticationManager(authenticationManager());
         http.addFilterBefore(myFilterSecurityInterceptor, FilterSecurityInterceptor.class);
     }
 }

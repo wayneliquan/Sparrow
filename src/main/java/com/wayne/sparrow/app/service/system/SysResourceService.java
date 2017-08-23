@@ -18,4 +18,6 @@ public interface SysResourceService {
     void save(SysResource sysResource);
 
     List<SysResource> findByIds(Long[] resourceIds);
+
+    void loadResource(boolean reset);
 }

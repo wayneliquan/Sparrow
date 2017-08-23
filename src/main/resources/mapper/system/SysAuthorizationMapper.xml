@@ -45,4 +45,23 @@
     INNER JOIN sys_role ON user_role.role_id = sys_role.id
     WHERE user_role.user_id = #{sysUserId} AND user_role.status = 0
   </select>
+
+  <resultMap id="SysPermission" type="com.wayne.sparrow.app.pojo.SysPermission">
+    <id column="id" jdbcType="BIGINT" property="id"/>
+    <result column="date_modify" jdbcType="TIMESTAMP" property="dateModify"/>
+    <result column="date_created" jdbcType="TIMESTAMP" property="dateCreated"/>
+    <association property="sysRole" resultMap="com.wayne.sparrow.app.mapper.system.SysRoleMapper.BaseResultMap"/>
+    <association property="sysResource" resultMap="com.wayne.sparrow.app.mapper.system.SysResourceMapper.BaseResultMap"/>
+  </resultMap>
+
+  <select id="listAllPermission" resultMap="SysPermission">
+    SELECT
+    role_resource.id, role_resource.date_modify, role_resource.date_created,
+    <include refid="com.wayne.sparrow.app.mapper.system.SysRoleMapper.Base_Column_List"/>,
+    <include refid="com.wayne.sparrow.app.mapper.system.SysResourceMapper.Base_Column_List"/>
+    FROM role_resource
+    INNER JOIN sys_role ON sys_role."id" = role_resource.role_id
+    INNER JOIN sys_resource ON role_resource.resource_id = sys_resource."id"
+  </select>
+
 </mapper>

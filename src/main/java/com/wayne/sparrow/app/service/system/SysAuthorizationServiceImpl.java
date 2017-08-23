@@ -6,6 +6,7 @@ import com.wayne.sparrow.app.entity.system.SysUser;
 import com.wayne.sparrow.app.mapper.system.SysAuthorizationMapper;
 import com.wayne.sparrow.app.pojo.SysAuthorization;
 import com.wayne.sparrow.app.pojo.SysPermission;
+import com.wayne.sparrow.core.constants.SysConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +50,17 @@ public class SysAuthorizationServiceImpl implements SysAuthorizationService{
             list.add(sysPermission);
         }
         sysAuthorizationMapper.insertBathSysPermission(list);
+    }
+
+    @Override
+    public List<SysPermission> listAllPermission() {
+        return sysAuthorizationMapper.listAllPermission();
+    }
+
+    @Override
+    public void loadSysPermission(boolean reset) {
+        List<SysPermission> sysPermissionList = sysAuthorizationMapper.listAllPermission();
+        SysConstants.setCacheResourceRoleMap(sysPermissionList, reset);
     }
 
 }

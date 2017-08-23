@@ -1,5 +1,6 @@
 package com.wayne.sparrow;
 
+import com.wayne.sparrow.core.constants.SysConstants;
 import com.wayne.sparrow.core.util.SpringContextUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -25,5 +26,6 @@ class AppStartListener implements ApplicationListener<ApplicationReadyEvent> {
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         SpringContextUtil.setApplicationContext(event.getApplicationContext());
+        new SysConstants().init();
     }
 }

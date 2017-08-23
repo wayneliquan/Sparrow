@@ -2,6 +2,7 @@ package com.wayne.sparrow.app.service.system;
 
 import com.wayne.sparrow.app.entity.system.SysResource;
 import com.wayne.sparrow.app.mapper.system.SysResourceMapper;
+import com.wayne.sparrow.core.constants.SysConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,6 +53,16 @@ public class SysResourceServiceImpl implements SysResourceService {
     @Override
     public List<SysResource> findByIds(Long[] resourceIds) {
         return sysResourceMapper.findByIds(resourceIds);
+    }
+
+    @Override
+    public void loadResource(boolean reset) {
+        try {
+            List<SysResource> sysResourceList = listAll();
+            SysConstants.setCacheResource(sysResourceList, reset);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private Integer getLevelByPid(Long pid) {

@@ -4,6 +4,7 @@ package com.wayne.sparrow.app.service.system;
 import com.wayne.sparrow.app.entity.system.SysResource;
 import com.wayne.sparrow.app.entity.system.SysRole;
 import com.wayne.sparrow.app.entity.system.SysUser;
+import com.wayne.sparrow.app.pojo.SysPermission;
 
 import java.util.List;
 
@@ -15,4 +16,8 @@ public interface SysAuthorizationService {
     void authorize(SysUser sysUser, List<SysRole> sysRoleList);
 
     void authorize(SysRole sysRole, List<SysResource> sysResourceList);
+
+    List<SysPermission> listAllPermission();
+
+    void loadSysPermission(boolean reset);
 }
