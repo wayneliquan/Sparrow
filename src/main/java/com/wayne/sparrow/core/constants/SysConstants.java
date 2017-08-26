@@ -21,6 +21,7 @@ import java.util.Map;
  */
 @Slf4j
 public class SysConstants {
+    public static final String CAPTCHA_SESSION_KEY = "com.wayne.sparrow.CAPTCHA_SESSION_KEY";
     // resource_id --> SysResource
     public static Map<Long, SysResource> SYS_RESOURCE_MAP = new HashMap<>();
     public static Map<String, List<String>> SYS_RESOURCE_ROLE_MAP = new HashMap<>();

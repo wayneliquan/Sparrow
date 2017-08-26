@@ -1,15 +1,27 @@
 package com.wayne.sparrow.app.configuration;
 
-import com.wayne.sparrow.app.configuration.security.LoginUserDetailsService;
-import com.wayne.sparrow.app.configuration.security.MyFilterSecurityInterceptor;
+import com.wayne.sparrow.app.configuration.security.*;
+import com.wayne.sparrow.app.exception.CaptchaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
+import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import javax.security.auth.login.AccountExpiredException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Wayne on 2017/8/8.
@@ -23,6 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * 配置登录有关的权限, 标示某个用户有某些角色
+     *
      * @param auth
      * @throws Exception
      */
@@ -35,6 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * 这里是授权的配置
+     *
      * @param http
      * @throws Exception
      */
@@ -68,7 +82,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.logout().logoutSuccessUrl("/login").logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
         myFilterSecurityInterceptor.setObserveOncePerRequest(false);
         myFilterSecurityInterceptor.setAuthenticationManager(authenticationManagerBean());
+        http.addFilterAt(loginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.addFilterAfter(myFilterSecurityInterceptor, FilterSecurityInterceptor.class);
+    }
+
+    @Bean
+    public AuthenticationFailureHandler authenticationFailureHandler() {
+        ExceptionMappingAuthenticationFailureHandler failureHandler = new ExceptionMappingAuthenticationFailureHandler();
+        Map<String, String> failureUrlMap = new HashMap<>();
+        failureUrlMap.put(BadCredentialsException.class.getName(), LoginAuthenticationFailureHandler.PASS_ERROR_URL);
+        failureUrlMap.put(CaptchaException.class.getName(), LoginAuthenticationFailureHandler.CODE_ERROR_URL);
+        failureUrlMap.put(AccountExpiredException.class.getName(), LoginAuthenticationFailureHandler.EXPIRED_URL);
+        failureUrlMap.put(LockedException.class.getName(), LoginAuthenticationFailureHandler.LOCKED_URL);
+        failureUrlMap.put(DisabledException.class.getName(), LoginAuthenticationFailureHandler.DISABLED_URL);
+        failureHandler.setExceptionMappings(failureUrlMap);
+        return failureHandler;
+    }
+
+    @Bean
+    public AbstractAuthenticationProcessingFilter loginAuthenticationFilter() throws Exception {
+        AbstractAuthenticationProcessingFilter loginAuthenticationFilter = new LoginAuthenticationFilter(); // 与configure()相同的过滤url
+        loginAuthenticationFilter.setAuthenticationManager(authenticationManager());
+        loginAuthenticationFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
+        return loginAuthenticationFilter;
     }
 
 }

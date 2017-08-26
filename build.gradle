@@ -57,6 +57,9 @@ dependencies {
     // json
     compile('com.alibaba:fastjson:1.2.31')
 
+    // google kaptcha 验证码
+    compile('com.github.penggle:kaptcha:2.3.2')
+
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.security:spring-security-test')
 }

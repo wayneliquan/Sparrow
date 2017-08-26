@@ -8,15 +8,6 @@
   <property name="PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} %-5level --- [%thread] %logger{36} : %msg%n"/>
 
   <springProfile name="dev">
-  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-    <encoder>
-      <pattern>${PATTERN}</pattern>
-    </encoder>
-  </appender>
-  <root level="INFO">
-    <appender-ref ref="CONSOLE"/>
-  </root>
-  </springProfile>
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
       <encoder>
         <pattern>${PATTERN}</pattern>
@@ -25,4 +16,13 @@
     <root level="INFO">
       <appender-ref ref="CONSOLE"/>
     </root>
+  </springProfile>
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>${PATTERN}</pattern>
+    </encoder>
+  </appender>
+  <root level="INFO">
+    <appender-ref ref="CONSOLE"/>
+  </root>
 </configuration>

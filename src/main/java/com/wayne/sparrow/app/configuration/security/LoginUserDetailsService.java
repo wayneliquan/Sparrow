@@ -3,6 +3,7 @@ package com.wayne.sparrow.app.configuration.security;
 import com.wayne.sparrow.app.entity.system.SysRole;
 import com.wayne.sparrow.app.entity.system.SysUser;
 import com.wayne.sparrow.app.service.system.SysUserService;
+import com.wayne.sparrow.core.constants.SessionConstants;
 import com.wayne.sparrow.core.util.SpringContextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -43,6 +44,8 @@ public class LoginUserDetailsService implements UserDetailsService {
             GrantedAuthority authority = new SimpleGrantedAuthority(sysRole.getCode());
             grantedAuthorities.add(authority);
         }
+        // 将user缓存到session中
+        SessionConstants.setUser(sysUser);
         return new User(sysUser.getUsername(), sysUser.getPassword(), grantedAuthorities);
     }
 }
