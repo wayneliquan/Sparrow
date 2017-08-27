@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bootstrap Login Form Template</title>
+
+  <!-- CSS -->
+  <!--<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">-->
+  <link rel="stylesheet" href="../../static/css/bootstrap/bootstrap.min.css"
+        th:href="@{/css/bootstrap/bootstrap.min.css}">
+  <link rel="stylesheet" href="../../static/css/font-awesome/font-awesome.min.css"
+        th:href="@{/css/font-awesome/font-awesome.min.css}">
+  <link rel="stylesheet" href="../../static/css/login/form-elements.css" th:href="@{/css/login/form-elements.css}">
+  <link rel="stylesheet" href="../../static/css/login/style.css" th:href="@{/css/login/style.css}">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+</head>
+
+<body>
+
+<!-- Top content -->
+<div class="top-content">
+
+  <div class="inner-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6 col-sm-offset-3 form-box">
+          <div class="form-top">
+            <div class="form-top-left">
+              <h3>Login Sparrow System</h3>
+            </div>
+          </div>
+          <div th:if="${param.error}" class="container text-center">
+            <span class="alert-danger">Username and password not matched, please try again!</span>
+          </div>
+          <div th:if="${param.code}" class="text-center">
+            <span class="alert-warning">Captcha code not matched, please try again!</span>
+          </div>
+          <div class="form-bottom">
+            <form role="form" th:action="@{/login}" method="post" class="login-form">
+              <div class="form-group">
+                <label class="sr-only" for="username">Username</label>
+                <input id="username"  name="username" class="form-control" type="text" placeholder="Username..."/>
+              </div>
+              <div class="form-group">
+                <label class="sr-only" for="password">Password</label>
+                <input id="password" name="password" class="form-control" type="password"  placeholder="Password..." />
+              </div>
+              <div th:if="${needCaptcha} != null" class="form-group" >
+                <label for="captcha" class="sr-only control-label">Captcha： </label>
+                <input id="captcha" name="captcha" class="form-control" type="text" placeholder="Captcha..."/>
+                <img style="border: 1px solid #bac5d4; cursor: pointer; border-radius: 5px;"
+                       alt="Captcha" title="refresh" src="/captcha" onclick="this.src='/captcha?d='+Math.random();"/>
+              </div>
+              <button type="submit" class="btn">Sign In</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 col-sm-offset-3 social-login">
+          <h3>...or login with:</h3>
+          <div class="social-login-buttons">
+            <a class="btn btn-link-1 btn-link-1-facebook" href="#">
+              <i class="fa fa-facebook"></i> Facebook
+            </a>
+            <a class="btn btn-link-1 btn-link-1-twitter" href="#">
+              <i class="fa fa-twitter"></i> Twitter
+            </a>
+            <a class="btn btn-link-1 btn-link-1-google-plus" href="#">
+              <i class="fa fa-google-plus"></i> Google Plus
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- Javascript -->
+<script src="../../static/js/jquery/jquery-3.2.1.min.js" th:src="@{/js/jquery/jquery-3.2.1.min.js}"></script>
+<script src="../../static/js/bootstrap/bootstrap.min.js" th:src="@{/js/bootstrap/bootstrap.min.js}"></script>
+<script src="../../static/js/jquery/jquery.validate.min.js" th:src="@{/js/jquery/jquery.validate.min.js}"></script>
+<script src="../../static/js/jquery/jquery.form.min.js" th:src="@{/js/jquery/jquery.form.min.js}"></script>
+<script src="https://cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script>
+<script src="//cdn.bootcss.com/blueimp-md5/2.8.0/js/md5.js"></script>
+<script src="../../static/js/login/scripts.js" th:src="@{/js/login/scripts.js}"></script>
+<!--[if lt IE 10]>
+<script src="https://cdn.bootcss.com/placeholder.js/3.1.0/placeholder.min.js"></script>
+<![endif]-->
+
+</body>
+
+</html>
