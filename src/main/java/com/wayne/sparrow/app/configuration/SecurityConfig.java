@@ -1,8 +1,10 @@
 package com.wayne.sparrow.app.configuration;
 
-import com.wayne.sparrow.app.configuration.security.*;
+import com.wayne.sparrow.app.configuration.security.LoginAuthenticationFailureHandler;
+import com.wayne.sparrow.app.configuration.security.LoginAuthenticationFilter;
+import com.wayne.sparrow.app.configuration.security.LoginUserDetailsService;
+import com.wayne.sparrow.app.configuration.security.MyFilterSecurityInterceptor;
 import com.wayne.sparrow.app.exception.CaptchaException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -13,10 +15,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.*;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.security.auth.login.AccountExpiredException;
@@ -29,9 +28,6 @@ import java.util.Map;
 @EnableWebSecurity
 @Configurable
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    @Autowired
-    private MyFilterSecurityInterceptor myFilterSecurityInterceptor;
 
     /**
      * 配置登录有关的权限, 标示某个用户有某些角色
@@ -80,10 +76,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.rememberMe().key("Sparrow");
         http.logout().logoutSuccessUrl("/login").logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
+        http.addFilterAt(loginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAfter(filterSecurityInterceptor(), FilterSecurityInterceptor.class);
+    }
+
+    @Bean
+    public FilterSecurityInterceptor filterSecurityInterceptor() throws Exception {
+        MyFilterSecurityInterceptor myFilterSecurityInterceptor = new MyFilterSecurityInterceptor();
+//        List<AccessDecisionVoter<?>> voters = new ArrayList<>();
+//        voters.add(new RoleVoter());
+//        voters.add(new AuthenticatedVoter());
+//        myFilterSecurityInterceptor.setAccessDecisionManager(new AffirmativeBased(voters));
+//        myFilterSecurityInterceptor.setSecurityMetadataSource(new MySecurityMetadataSource());
         myFilterSecurityInterceptor.setObserveOncePerRequest(false);
         myFilterSecurityInterceptor.setAuthenticationManager(authenticationManagerBean());
-        http.addFilterAt(loginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-        http.addFilterAfter(myFilterSecurityInterceptor, FilterSecurityInterceptor.class);
+        return myFilterSecurityInterceptor;
     }
 
     @Bean
@@ -106,5 +113,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         loginAuthenticationFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
         return loginAuthenticationFilter;
     }
-
 }

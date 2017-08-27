@@ -14,7 +14,6 @@ import java.util.List;
  * Created by zhanliquan on 17-8-10.
  * Description:
  */
-@Component
 public class MyFilterSecurityInterceptor extends FilterSecurityInterceptor {
 
     @Override

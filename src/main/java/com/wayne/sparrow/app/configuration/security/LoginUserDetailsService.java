@@ -36,8 +36,8 @@ public class LoginUserDetailsService implements UserDetailsService {
         }
         List<SysRole> sysRoleList = sysUserService.findRolesBySysUserId(sysUser.getId());
         if (ListUtils.isEmpty(sysRoleList)) {
-            log.info("没有分配对应的权限");
-            throw new UsernameNotFoundException("没有分配对应的权限");
+            log.info("没有分配对应的角色");
+            throw new UsernameNotFoundException("没有分配对应的角色");
         }
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         for (SysRole sysRole : sysRoleList) {

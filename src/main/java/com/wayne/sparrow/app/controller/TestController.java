@@ -75,4 +75,9 @@ public class TestController {
         requestPath = requestPath.substring(request.getContextPath().length() + 1);// 去掉项目路径
         return requestPath;
     }
+
+    @GetMapping("/login")
+    public String login() {
+        return "test/login";
+    }
 }

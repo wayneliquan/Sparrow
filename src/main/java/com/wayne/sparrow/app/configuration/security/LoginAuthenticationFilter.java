@@ -28,13 +28,20 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
-        String requestCaptcha = request.getParameter(captchaKey);
-        String genCaptcha = (String) SessionConstants.get(SysConstants.CAPTCHA_SESSION_KEY, "");
-        log.info("开始校验验证码，生成的验证码为："+genCaptcha+" ，输入的验证码为："+requestCaptcha);
-        if (!genCaptcha.equalsIgnoreCase(requestCaptcha)) {
-            request.getSession().setAttribute(SysConstants.CAPTCHA_SESSION_KEY, "");
-            throw new CaptchaException("captcha code not matched!");
+        if (SysConstants.isShowCaptcha()) {
+            String requestCaptcha = request.getParameter(captchaKey);
+            String genCaptcha = SessionConstants.get(SysConstants.CAPTCHA_SESSION_KEY, "");
+            log.info("开始校验验证码，生成的验证码为：" + genCaptcha + " ，输入的验证码为：" + requestCaptcha);
+            if (!genCaptcha.equalsIgnoreCase(requestCaptcha)) {
+                request.getSession().setAttribute(SysConstants.CAPTCHA_SESSION_KEY, "");
+                throw new CaptchaException("captcha code not matched!");
+            }
         }
-        return super.attemptAuthentication(request, response);
+        int count = SessionConstants.get(SysConstants.ATTEMPT_LOGIN_COUNT_SESSION_KEY, 0);
+        SessionConstants.put(SysConstants.ATTEMPT_LOGIN_COUNT_SESSION_KEY, ++count);
+        Authentication authentication = super.attemptAuthentication(request, response);
+        // 如果没有抛出异常， 应该是登录成功了。
+        SessionConstants.put(SysConstants.ATTEMPT_LOGIN_COUNT_SESSION_KEY, 0);
+        return authentication;
     }
 }

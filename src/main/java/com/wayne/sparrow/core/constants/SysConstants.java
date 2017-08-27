@@ -22,6 +22,10 @@ import java.util.Map;
 @Slf4j
 public class SysConstants {
     public static final String CAPTCHA_SESSION_KEY = "com.wayne.sparrow.CAPTCHA_SESSION_KEY";
+    public static final String ATTEMPT_LOGIN_COUNT_SESSION_KEY = "com.wayne.sparrow.ATTEMPT_LOGIN_COUNT_SESSION_KEY";
+
+    public static final int MAX_ATTEMPT_LOGIN_COUNT = 3;
+
     // resource_id --> SysResource
     public static Map<Long, SysResource> SYS_RESOURCE_MAP = new HashMap<>();
     public static Map<String, List<String>> SYS_RESOURCE_ROLE_MAP = new HashMap<>();
@@ -94,5 +98,10 @@ public class SysConstants {
         if (Validator.isNotNull(requestMatcherList)) {
             SYS_URL_MATCHER_LIST.addAll(requestMatcherList);
         }
+    }
+
+    public static boolean isShowCaptcha() {
+        int count = SessionConstants.get(ATTEMPT_LOGIN_COUNT_SESSION_KEY, 0);
+        return count > MAX_ATTEMPT_LOGIN_COUNT;
     }
 }

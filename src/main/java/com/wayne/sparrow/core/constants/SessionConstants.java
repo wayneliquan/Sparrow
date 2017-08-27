@@ -36,8 +36,8 @@ public class SessionConstants {
         return getMap().get(key);
     }
 
-    public static Object get(Object key, String defaltValue){
-        return getMap().getOrDefault(key, defaltValue);
+    public static <T> T get(Object key, T defaltValue){
+        return (T) getMap().getOrDefault(key, defaltValue);
     }
 
     public static SysUser getUser(){
