@@ -7,6 +7,7 @@ import com.wayne.sparrow.app.vo.EntityToVO;
 import com.wayne.sparrow.app.vo.TreeNode;
 import com.wayne.sparrow.core.common.OperationMessage;
 import com.wayne.sparrow.core.common.controller.BaseController;
+import com.wayne.sparrow.core.constants.SysConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -54,13 +57,17 @@ public class SysResourceController extends BaseController {
             SysResource sysResource = sysResourceService.findById(resourceId);
             model.addAttribute("sysResource", sysResource);
         }
+        Collection<SysResource> resources = SysConstants.SYS_RESOURCE_MAP.values();
+        List<SysResource> resourceList = new ArrayList<>(resources);
+        List<TreeNode> nodes = EntityToVO.resourceToTree(resourceList, null);
+        String resourceData = JSON.toJSONString(nodes);
+        model.addAttribute("resourceData", resourceData);
         return getModulePath() + "-input";
     }
 
     @PostMapping("/save")
     @ResponseBody
     public OperationMessage save(SysResource sysResource) {
-        System.out.println(sysResource);
         OperationMessage opMsg = initOpMsg();
         sysResourceService.save(sysResource);
         return opMsg;
@@ -69,9 +76,8 @@ public class SysResourceController extends BaseController {
     @GetMapping("/tree")
     public String tree(Model model) {
         List<SysResource> sysResourceList = sysResourceService.listAll();
-        List<TreeNode> nodes = EntityToVO.resourceToTree(sysResourceList);
+        List<TreeNode> nodes = EntityToVO.resourceToTree(sysResourceList, null);
         String resourceData = JSON.toJSONString(nodes);
-        System.out.println(resourceData);
         model.addAttribute("resourceData", resourceData);
         return getModulePath() + "-tree";
     }

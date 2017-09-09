@@ -10,6 +10,7 @@ import com.wayne.sparrow.app.vo.EntityToVO;
 import com.wayne.sparrow.app.vo.TreeNode;
 import com.wayne.sparrow.core.common.OperationMessage;
 import com.wayne.sparrow.core.common.controller.BaseController;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,6 +26,7 @@ import java.util.List;
  * Created by zhanliquan on 17-8-10.
  * Description:
  */
+@Slf4j
 @Controller
 @RequestMapping("/sysRole")
 public class SysRoleController extends BaseController {
@@ -70,9 +72,9 @@ public class SysRoleController extends BaseController {
 
     @GetMapping("/authorization")
     public String authorization(Model model, Long sysRoleId) {
-        List<SysResource> authorizedResourceList = sysRoleService.listAuthorizedResource(sysRoleId);
+        List<Long> authorizedResourceIdList = sysAuthorizationService.findResourceIdsByRoleId(sysRoleId);
         List<SysResource> sysResourceList = sysResourceService.listAll();
-        List<TreeNode> nodes = EntityToVO.resourceToTree(sysResourceList);
+        List<TreeNode> nodes = EntityToVO.resourceToTree(sysResourceList, authorizedResourceIdList);
         String resourceData = JSON.toJSONString(nodes);
         model.addAttribute("sysRoleId", sysRoleId);
         model.addAttribute("resourceData", resourceData);
@@ -91,9 +93,7 @@ public class SysRoleController extends BaseController {
         OperationMessage opMsg = initOpMsg();
         SysRole sysRole = sysRoleService.findById(sysRoleId);
         List<SysResource> resourceList = sysResourceService.findByIds(resourceIds);
-        System.out.println("resourceList" + resourceList);
-        System.out.println(sysRoleId);
-        System.out.println(Arrays.toString(resourceIds));
+        log.info("resourceList" + resourceList);
         sysAuthorizationService.authorize(sysRole, resourceList);
         return opMsg;
     }

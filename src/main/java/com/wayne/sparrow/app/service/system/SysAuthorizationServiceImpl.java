@@ -63,4 +63,9 @@ public class SysAuthorizationServiceImpl implements SysAuthorizationService{
         SysConstants.setCacheResourceRoleMap(sysPermissionList, reset);
     }
 
+    @Override
+    public List<Long> findResourceIdsByRoleId(Long sysRoleId) {
+        return sysAuthorizationMapper.findResourceIdsByRoleId(sysRoleId);
+    }
+
 }

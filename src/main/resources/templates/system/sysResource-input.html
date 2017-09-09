@@ -8,16 +8,20 @@
   <!-- bootstrap -->
   <link rel="stylesheet" href="../../static/css/bootstrap/bootstrap.min.css"
         th:href="@{/css/bootstrap/bootstrap.min.css}" />
+
+  <link rel="stylesheet" href="../../static/css/bootstrap-treeview/bootstrap-treeview.css"
+        th:href="@{/css/bootstrap-treeview/bootstrap-treeview.css}"/>
+
 </head>
 <body>
 <div>
   <!-- title -->
   <div>
-    <p class="text-center text-muted h2">系统资源输入</p>
+    <p class="text-center text-muted h3">系统资源输入</p>
   </div>
   <hr width="80%" />
   <div class="container">
-    <form id="sysResourceForm" method="post" class="form-horizontal" action="/sysResource/save">
+    <form id="sysResourceForm" method="post" class="form-horizontal" action="save">
       <div class="form-group">
         <label class="col-lg-3 control-label">资源名称</label>
         <div class="col-lg-5">
@@ -33,9 +37,11 @@
       </div>
 
       <div class="form-group">
-        <label class="col-lg-3 control-label">上级资源</label>
+        <label for="pResourceName" class="col-lg-3 control-label">上级资源</label>
         <div class="col-lg-5">
-          <input type="text" class="form-control" name="pid" th:value="${sysResource?.pid}"/>
+          <input id="pResourceName" type="text" class="form-control" style="background-color: white;" name="pResourceName" onfocus="Panel.show();" readonly="true"/>
+          <input type="hidden" class="form-control" name="pid" th:value="${sysResource?.pid}"/>
+          <div id="pResTree" style="display: none;"></div>
         </div>
       </div>
 
@@ -86,5 +92,98 @@
     </form>
   </div>
 </div>
+<script th:src="@{/js/jquery/jquery.validate.min.js}" src="../../static/js/jquery/jquery.validate.min.js"></script>
+<script th:src="@{/js/jquery/jquery.form.min.js}" src="../../static/js/jquery/jquery.form.min.js"></script>
+<script type="text/javascript" src="../../static/js/bootstrap-treeview/bootstrap-treeview.js"
+        th:src="@{/js/bootstrap-treeview/bootstrap-treeview.js}"></script>
+<script src="http://cdn.cdnjs.net/jquery-bgiframe/3.0.1/jquery.bgiframe.js"></script>
+<script type="text/javascript" src="../../static/js/pointer-popup.js" th:src="@{/js/pointer-popup.js}"></script>
+<script type="text/javascript" src="../../static/js/shake.js" th:src="@{/js/shake.js}"></script>
+<script>
+    $("#sysResourceForm").validate({
+        errorClass: "help-block",
+        focusInvalid: true,
+        rules:{
+            name: {
+                required: true,
+                rangelength:[1,200]
+            },
+            url: {
+                required: true,
+                maxlength: 8000
+            },
+            pname: "required",
+            type: "required",
+            weight: {
+                required: true,
+                digits: true
+            },
+            status: "required"
+        },
+        errorPlacement: function (error, element) {
+            var formGroup = ($(element).parents(".form-group"));
+            formGroup.removeClass("has-success");
+            formGroup.addClass("has-error");
+            $(error).insertAfter($(element));
+        },
+        highlight: function (element, errorClass) {
+            $(element).shake(3, 5, 150);
+        },
+        success: function (element) {
+            var formGroup = ($(element).parents(".form-group"));
+            formGroup.removeClass("has-error");
+            formGroup.addClass("has-success");
+        },
+        submitHandler: function (form) {
+            $(form).ajaxSubmit({
+                url: "save",
+                type: "POST",
+                success: function (msg) {
+                    alert(msg.message);
+                    window.location.reload();
+                }
+            });
+        }
+    });
+</script>
+<script th:inline="javascript">
+  var resourceData = [[${resourceData}]];
+</script>
+<script>
+  var treePanel;
+  function getTree() {
+      return resourceData;
+  }
+  var tree = $('#pResTree').treeview({
+      color: "#428bca",
+      expandIcon: 'glyphicon glyphicon-chevron-right',
+      collapseIcon: 'glyphicon glyphicon-chevron-down',
+      nodeIcon: 'glyphicon glyphicon-bookmark',
+      showIcon: false,
+      showCheckbox: false,
+      showBorder: false,
+      data: getTree(),
+      onNodeSelected: function (event, node) {
+          console.log(event);
+          console.log(node);
+          $("#pResourceName").val(node.text);
+          $("#pid").val(node.id);
+          Panel.hide();
+      }
+  });
+  var Panel={
+      show:function(){
+          if (typeof(treePanel) === "undefined"){
+              //弹出框
+              treePanel=$("#pResourceName").popup('pResTree',300, 400);
+              $("#pResTree").show();
+          }
+          treePanel.show();
+      },
+      hide:function(){
+          treePanel.hide();
+      }
+  };
+</script>
 </body>
 </html>

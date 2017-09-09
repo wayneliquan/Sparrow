@@ -62,9 +62,7 @@ CREATE TABLE role_resource
 (
   id           BIGSERIAL              NOT NULL,
   role_id      BIGINT                 NOT NULL,
-  role_code    CHARACTER VARYING(255) NOT NULL,
   resource_id  BIGINT                 NOT NULL,
-  resource_url CHARACTER VARYING(255) NOT NULL,
   date_modify  TIMESTAMP(3) WITHOUT TIME ZONE,
   date_created TIMESTAMP(3) WITHOUT TIME ZONE DEFAULT now(),
   CONSTRAINT role_resource_pkey PRIMARY KEY (id)
@@ -73,26 +71,51 @@ CREATE TABLE role_resource
 -- sys_user 插入需要保证 id为1,2
 INSERT INTO "sys_user" ("username", "password", "nickname", "status") VALUES ('admin', '21232f297a57a5a743894a0e4a801fc3', '管理员', '0');
 INSERT INTO "sys_user" ("username", "password", "nickname", "status") VALUES ('user', '202cb962ac59075b964b07152d234b70', NULL, '0');
+INSERT INTO "sys_user" ("username", "password", "nickname", "status") VALUES ('test', '202cb962ac59075b964b07152d234b70', NULL, '0');
 
 -- sys_role 插入需要保证 id为1,2
 INSERT INTO "sys_role" ("name", "code", "weight", "type") VALUES ('系统管理员', 'ROLE_SYS_ADMIN', '1', '1');
 INSERT INTO "sys_role" ("name", "code", "weight", "type") VALUES ('用户', 'ROLE_USER', '2', '4');
+INSERT INTO "sys_role" ("name", "code", "weight", "type") VALUES ('TEST', 'ROLE_TEST', '4', '4');
 
 
--- sys_user 插入需要保证 id为1,2
+-- user_role 插入需要保证 id为1,2
 INSERT INTO "user_role" ("user_id", "role_id") VALUES ('1', '1');
 INSERT INTO "user_role" ("user_id", "role_id") VALUES ('2', '2');
+INSERT INTO "user_role" ("user_id", "role_id") VALUES ('2', '3');
 
 
-INSERT INTO "sys_resource" ("pid", "url", "icon", "weight", "code", "type", "level", "name", "pname", "status", "unique_code") VALUES ( '0', '/', NULL, '1', '', '1', '1', '系统管理', NULL, '0', NULL);
-INSERT INTO "sys_resource" ("pid", "url", "icon", "weight", "code", "type", "level", "name", "pname", "status", "unique_code") VALUES ( '1', '/sysResource/list', NULL, '2', 'SYS', '1', '2', '资源管理', NULL, '0', NULL);
-INSERT INTO "sys_resource" ("pid", "url", "icon", "weight", "code", "type", "level", "name", "pname", "status", "unique_code") VALUES ( '1', '/sysRole/list', NULL, '1', 'SYS', '1', '2', '角色管理', NULL, '0', NULL);
+
+INSERT INTO "sys_resource" ("pid", "url", "icon", "weight", "code", "type", "level", "name", "pname", "status", "unique_code")
+VALUES 
+( '0', '/', NULL, '1', '', '1', '1', '系统管理', NULL, '0', NULL),
+( '1', '/sysResource/list', NULL, '2', 'SYS', '1', '2', '资源管理', NULL, '0', NULL),
+( '1', '/sysRole/list', NULL, '2', 'SYS', '1', '2', '角色管理', NULL, '0', NULL),
+( '1', '/sysUser/list', NULL, '2', 'SYS', '1', '2', '用户管理', NULL, '0', NULL),
+( '1', '/device/list', NULL, '5', 'DEVICE', '1', '2', 'License管理', NULL, '0', NULL),
+( '1', '/license/list', NULL, '6', 'LICENSE', '1', '2', 'License管理', NULL, '0', NULL),
+( '1', '/deviceOta/list', NULL, '7', 'DEVICE', '1', '2', '设备OTA信息', NULL, '0', NULL),
+( '1', '/deviceTest/list', NULL, '8', 'DEVICE', '1', '2', '测试数据上传', NULL, '0', NULL);
+
+INSERT INTO "role_resource" ("role_id", "resource_id") 
+VALUES
+('1', '1'),
+('1', '2'),
+('1', '3'),
+('1', '4'),
+('1', '5'),
+('1', '6'),
+('1', '7'),
+('1', '8'),
+('1', '9'),
+('2', '1'),
+('2', '2'),
+('2', '5'),
+('2', '6'),
+('2', '7'),
+('2', '8'),
+('3', '1'),
+('3', '8');
 
 
-INSERT INTO "role_resource" ("role_id", "role_code", "resource_id", "resource_url") VALUES ('2', 'ROLE_USER', '1', '/');
-INSERT INTO "role_resource" ("role_id", "role_code", "resource_id", "resource_url") VALUES ('2', 'ROLE_USER', '3', '/sysRole/list');
-INSERT INTO "role_resource" ("role_id", "role_code", "resource_id", "resource_url") VALUES ('1', 'ROLE_SYS_ADMIN', '1', '/');
-INSERT INTO "role_resource" ("role_id", "role_code", "resource_id", "resource_url") VALUES ('1', 'ROLE_SYS_ADMIN', '2', '/sysResource/list');
-INSERT INTO "role_resource" ("role_id", "role_code", "resource_id", "resource_url") VALUES ('1', 'ROLE_SYS_ADMIN', '3', '/sysRole/list');
-INSERT INTO "role_resource" ("role_id", "role_code", "resource_id", "resource_url") VALUES ('1', 'ROLE_SYS_ADMIN', '1', '/');
 

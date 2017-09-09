@@ -24,6 +24,21 @@ public class TreeNode {
     private List<String> tags;// ['available'],
     private List<TreeNode> nodes;
 
+    public void check() {
+        if (state == null) {
+            state = new State();
+        }
+        state.setChecked(true);
+    }
+
+    public void expand() {
+        if (state == null) {
+            state = new State();
+        }
+        state.setExpanded(true);
+    }
+
+    @Data
     class State {
         private boolean checked;
         private boolean expanded;

@@ -38,7 +38,10 @@
               if (iframe) {
                   var iframeWin = iframe.contentWindow || iframe.contentDocument.parentWindow;
                   if (iframeWin.document.body) {
-                      iframe.height = iframeWin.document.documentElement.scrollHeight || iframeWin.document.body.scrollHeight;
+                      var height = iframeWin.document.documentElement.scrollHeight || iframeWin.document.body.scrollHeight;
+                      if (iframe.height !== 'undefined' && iframe.height < height) {
+                          iframe.height = Math.max(height, 800);
+                      }
                   }
               }
           }
@@ -46,6 +49,9 @@
       <iframe style="width: 100%; display: none;" frameborder="0" scrolling="no" id="centerFrame"
               onload="setIframeHeight(this)" src="">
       </iframe>
+      <script type="text/javascript">
+          window.setInterval("setIframeHeight(document.getElementById('centerFrame'))", 1000);//定时去检查iframe的高度,这样保证时时都是自动高了
+      </script>
     </div>
   </div>
   <!-- footer -->

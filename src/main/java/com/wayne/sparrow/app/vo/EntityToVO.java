@@ -3,6 +3,7 @@ package com.wayne.sparrow.app.vo;
 import com.wayne.sparrow.app.entity.system.SysResource;
 import com.wayne.sparrow.app.entity.system.SysRole;
 import com.wayne.sparrow.app.service.system.SysRoleService;
+import com.wayne.sparrow.core.util.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +25,14 @@ public class EntityToVO {
     public void init() {
         entityToVO = this;
         entityToVO.roleService = this.roleService;
+    }
+
+    private static boolean isAuthorized(Long sysResourceId, List<Long> authorizedResourceIdList) {
+        if (Validator.isNotNull(authorizedResourceIdList)) {
+            return authorizedResourceIdList.contains(sysResourceId);
+        } else {
+            return false;
+        }
     }
 
     public static List<MenuNode> resourceToMenuNode(List<SysResource> sysResourceList) {
@@ -104,20 +113,22 @@ public class EntityToVO {
         return tempMap;
     }
 
-    public static List<TreeNode> resourceToTree(List<SysResource> sysResourceList) {
+    public static List<TreeNode> resourceToTree(List<SysResource> sysResourceList, List<Long> authorizedResourceIdList) {
         // 把resource 转化为tree
         Map<Long, List<SysResource>> tempMap = resourceToMap(sysResourceList);
         // pid = 0
         List<Long> keys = new ArrayList<>(tempMap.keySet());
         Collections.sort(keys);
         Long topId = keys.get(0);
-        System.out.println("topId = " +  topId);
         List<SysResource> topResourceList = tempMap.get(topId);
 
-        assert (topResourceList!=null && !topResourceList.isEmpty());
         List<TreeNode> topNodeList = new ArrayList<>();
         for(SysResource sysResource: topResourceList) {
             TreeNode treeNode = new TreeNode();
+            if (isAuthorized(sysResource.getId(), authorizedResourceIdList)) {
+                treeNode.check();
+                treeNode.expand();
+            }
             tree(tempMap, treeNode, sysResource);
             topNodeList.add(treeNode);
         }

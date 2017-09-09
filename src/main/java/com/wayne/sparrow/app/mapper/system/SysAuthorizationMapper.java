@@ -27,4 +27,6 @@ public interface SysAuthorizationMapper {
     List<SysRole> listUserRole(@Param("sysUserId") Long sysUserId);
 
     List<SysPermission> listAllPermission();
+
+    List<Long> findResourceIdsByRoleId(Long sysRoleId);
 }

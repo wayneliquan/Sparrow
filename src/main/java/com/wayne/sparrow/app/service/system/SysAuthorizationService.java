@@ -20,4 +20,6 @@ public interface SysAuthorizationService {
     List<SysPermission> listAllPermission();
 
     void loadSysPermission(boolean reset);
+
+    List<Long> findResourceIdsByRoleId(Long sysRoleId);
 }
