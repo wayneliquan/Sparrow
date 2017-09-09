@@ -40,13 +40,6 @@
     )
   </insert>
 
-  <!--<update id="update" parameterType="com.weiqing.snarl.app.entity.system.SysRole">-->
-  <!--UPDATE sys_role-->
-  <!--<trim prefix="set" suffixOverrides=",">-->
-  <!--<if test="name != null"></if>      name = , code, weight, type, date_modify, date_created-->
-  <!--</trim>-->
-  <!--</update>-->
-
   <select id="findByIds" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />

@@ -11,6 +11,7 @@
 
   <link rel="stylesheet" href="../../static/css/bootstrap-treeview/bootstrap-treeview.css"
         th:href="@{/css/bootstrap-treeview/bootstrap-treeview.css}"/>
+  <link rel="stylesheet" href="../../static/css/common.css" th:href="@{/css/common.css}">
 
 </head>
 <body>
@@ -22,31 +23,32 @@
   <hr width="80%" />
   <div class="container">
     <form id="sysResourceForm" method="post" class="form-horizontal" action="save">
+      <input type="hidden" name="id" th:value="${sysResource?.id}" />
       <div class="form-group">
-        <label class="col-lg-3 control-label">资源名称</label>
+        <label class="col-lg-3 control-label"><span class="non-empty">*</span>资源名称:</label>
         <div class="col-lg-5">
           <input type="text" class="form-control" name="name" th:value="${sysResource?.name}"/>
         </div>
       </div>
 
       <div class="form-group">
-        <label class="col-lg-3 control-label">资源URL</label>
+        <label class="col-lg-3 control-label"><span class="non-empty">*</span>资源URL:</label>
         <div class="col-lg-5">
           <input type="text" class="form-control" name="url" th:value="${sysResource?.url}"/>
         </div>
       </div>
 
       <div class="form-group">
-        <label for="pResourceName" class="col-lg-3 control-label">上级资源</label>
+        <label for="pname" class="col-lg-3 control-label">上级资源:</label>
         <div class="col-lg-5">
-          <input id="pResourceName" type="text" class="form-control" style="background-color: white;" name="pResourceName" onfocus="Panel.show();" readonly="true"/>
-          <input type="hidden" class="form-control" name="pid" th:value="${sysResource?.pid}"/>
+          <input type="hidden" name="pid" th:value="${sysResource?.pid}"/>
+          <input id="pname" type="text" class="form-control" style="background-color: white;" name="pname" onfocus="Panel.show();" readonly="true"/>
           <div id="pResTree" style="display: none;"></div>
         </div>
       </div>
 
       <div class="form-group">
-        <label for="type" class="control-label col-lg-3">资源类型:<span class="non-empty">*</span></label>
+        <label for="type" class="control-label col-lg-3"><span class="non-empty">*</span>资源类型:</label>
         <div class="col-lg-5">
           <select name="type" id="type" class="form-control">
             <option value="" style="display:none">请选择</option>
@@ -57,21 +59,21 @@
       </div>
 
       <div class="form-group">
-        <label class="col-lg-3 control-label">weight</label>
+        <label class="col-lg-3 control-label"><span class="non-empty">*</span>Weight:</label>
         <div class="col-lg-5">
-          <input type="text" class="form-control" name="weight" th:value="${sysResource?.weight}"/>
+          <input type="text" class="form-control" name="weight" th:value="${sysResource}? sysResource.weight:'0'"/>
         </div>
       </div>
 
       <div class="form-group">
-        <label class="col-lg-3 control-label">资源编码</label>
+        <label class="col-lg-3 control-label">资源编码:</label>
         <div class="col-lg-5">
           <input type="text" class="form-control" name="code" th:value="${sysResource?.code}"/>
         </div>
       </div>
 
       <div class="form-group">
-        <label for="" class="control-label col-md-3">状态:<span class="red">*</span></label>
+        <label for="" class="control-label col-md-3"><span class="non-empty">*</span>状态:</label>
         <div class="radio col-md-2">
           <label>
             <input type="radio" name="status" value="0" th:checked="${((sysResource == null) or (sysResource.status == 0))} ?  checked" /> 启用
@@ -164,18 +166,17 @@
       showBorder: false,
       data: getTree(),
       onNodeSelected: function (event, node) {
-          console.log(event);
-          console.log(node);
-          $("#pResourceName").val(node.text);
+          $("#pname").val(node.text);
           $("#pid").val(node.id);
           Panel.hide();
+          $("#sysResourceForm").validate().element($("#pname"));
       }
   });
   var Panel={
       show:function(){
           if (typeof(treePanel) === "undefined"){
               //弹出框
-              treePanel=$("#pResourceName").popup('pResTree',300, 400);
+              treePanel=$("#pname").popup('pResTree',300, 400);
               $("#pResTree").show();
           }
           treePanel.show();
