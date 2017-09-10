@@ -88,9 +88,15 @@
         data: getTree(),
         selectable: false,
         onNodeSelected: function (event, node) {
-            console.log(event);
-            console.log(node);
-            showCenterFrame(node.href);
+            if (node.href !== '/') {
+                showCenterFrame(node.href);
+            }
+            expandNode(this, node);
+        },
+        onNodeUnselected: function (event, node) {
+            if (node.href !== '/') {
+                showCenterFrame(node.href);
+            }
             expandNode(this, node);
         }
     });

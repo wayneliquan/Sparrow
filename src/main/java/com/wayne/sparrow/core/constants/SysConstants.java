@@ -4,7 +4,7 @@ import com.wayne.sparrow.app.entity.system.SysResource;
 import com.wayne.sparrow.app.pojo.SysPermission;
 import com.wayne.sparrow.app.service.system.SysAuthorizationService;
 import com.wayne.sparrow.app.service.system.SysResourceService;
-import com.wayne.sparrow.core.util.SpringContextUtil;
+import com.wayne.sparrow.core.util.SpringContextUtils;
 import com.wayne.sparrow.core.util.Validator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -21,7 +21,7 @@ import java.util.Map;
  */
 @Slf4j
 public class SysConstants {
-    public static final String CAPTCHA_SESSION_KEY = "com.wayne.sparrow.CAPTCHA_SESSION_KEY";
+    public static final String CAPTCHA_SESSION_KEY = "com.weiqing.snarl.CAPTCHA_SESSION_KEY";
     public static final String ATTEMPT_LOGIN_COUNT_SESSION_KEY = "com.wayne.sparrow.ATTEMPT_LOGIN_COUNT_SESSION_KEY";
 
     public static final int MAX_ATTEMPT_LOGIN_COUNT = 3;
@@ -38,7 +38,7 @@ public class SysConstants {
 
     private void loadResourceRoleMap() {
         try {
-            SysAuthorizationService sysAuthorizationService = SpringContextUtil.getBean(SysAuthorizationService.class);
+            SysAuthorizationService sysAuthorizationService = SpringContextUtils.getBean(SysAuthorizationService.class);
             sysAuthorizationService.loadSysPermission(false);
             log.info("加载系统权限缓存成功！");
         } catch (Exception e) {
@@ -48,7 +48,7 @@ public class SysConstants {
 
     private void loadResource() {
         try {
-            SysResourceService sysResourceService = SpringContextUtil.getBean(SysResourceService.class);
+            SysResourceService sysResourceService = SpringContextUtils.getBean(SysResourceService.class);
             sysResourceService.loadResource(false);
             log.info("加载系统资源缓存成功！");
         } catch (Exception e) {

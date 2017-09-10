@@ -6,6 +6,7 @@ import com.wayne.sparrow.app.configuration.security.LoginUserDetailsService;
 import com.wayne.sparrow.app.configuration.security.MyFilterSecurityInterceptor;
 import com.wayne.sparrow.app.exception.CaptchaException;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -14,8 +15,11 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.*;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.security.auth.login.AccountExpiredException;
@@ -75,7 +79,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.formLogin().loginPage("/login");
         http.csrf().disable();
         http.rememberMe().key("Sparrow");
-        http.logout().logoutSuccessUrl("/login").logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
+        http.logout()
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .logoutSuccessUrl("/login");
+        http.sessionManagement()
+                .sessionFixation().changeSessionId()
+                .maximumSessions(3).maxSessionsPreventsLogin(false)
+                .sessionRegistry(sessionRegistry());
         http.addFilterAt(loginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.addFilterAfter(filterSecurityInterceptor(), FilterSecurityInterceptor.class);
     }
@@ -112,5 +124,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         loginAuthenticationFilter.setAuthenticationManager(authenticationManager());
         loginAuthenticationFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
         return loginAuthenticationFilter;
+    }
+
+    @Bean
+    public SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
+    }
+
+    @Bean
+    public ServletListenerRegistrationBean<HttpSessionEventPublisher> httpSessionEventPublisher() {
+        return new ServletListenerRegistrationBean<>(new HttpSessionEventPublisher());
     }
 }

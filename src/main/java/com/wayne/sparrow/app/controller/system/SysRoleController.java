@@ -64,7 +64,6 @@ public class SysRoleController extends BaseController {
     @PostMapping("/save")
     @ResponseBody
     public OperationMessage save(SysRole sysRole) {
-        System.out.println(sysRole);
         OperationMessage opMsg = initOpMsg();
         sysRoleService.save(sysRole);
         return opMsg;

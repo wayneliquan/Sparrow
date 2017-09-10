@@ -70,36 +70,6 @@ public class EntityToVO {
         }
     }
 
-    public static List<SysResourceNode> resourceToNode(List<SysResource> sysResourceList) {
-        Map<Long, List<SysResource>> tempMap = resourceToMap(sysResourceList);
-        List<Long> keys = new ArrayList<>(tempMap.keySet());
-        Collections.sort(keys);
-        Long topId = keys.get(0);
-        System.out.println("topId = " +  topId);
-        List<SysResource> topResourceList = tempMap.get(topId);
-
-        assert (topResourceList!=null && !topResourceList.isEmpty());
-        List<SysResourceNode> topNodeList = new ArrayList<>();
-        for(SysResource sysResource: topResourceList) {
-            SysResourceNode node = new SysResourceNode(sysResource);
-            treeResource(tempMap, node, sysResource);
-            topNodeList.add(node);
-        }
-        return topNodeList;
-    }
-
-    public static void treeResource(Map<Long, List<SysResource>> nodeMap, SysResourceNode node, SysResource sysResource) {
-        Long topId = sysResource.getId();
-        List<SysResource> tempList = nodeMap.getOrDefault(topId, null);
-        if (tempList != null) {
-            for (SysResource subSysResource : tempList) {
-                SysResourceNode subNode = new SysResourceNode(subSysResource);
-                treeResource(nodeMap, subNode, subSysResource);
-                node.addSubNode(subNode);
-            }
-        }
-    }
-
     public static Map<Long, List<SysResource>> resourceToMap(List<SysResource> sysResourceList) {
         Map<Long, List<SysResource>> tempMap = new HashMap<>();
         for (SysResource sysResource : sysResourceList) {
@@ -126,27 +96,32 @@ public class EntityToVO {
         for(SysResource sysResource: topResourceList) {
             TreeNode treeNode = new TreeNode();
             if (isAuthorized(sysResource.getId(), authorizedResourceIdList)) {
-                treeNode.check();
-                treeNode.expand();
+                treeNode.toCheck();
+                treeNode.toExpand();
             }
-            tree(tempMap, treeNode, sysResource);
+            tree(tempMap, treeNode, sysResource, authorizedResourceIdList);
             topNodeList.add(treeNode);
         }
         return topNodeList;
     }
 
-    public static List<TreeNode> sysRoleToTree(List<SysRole> sysRoleList) {
+    public static List<TreeNode> sysRoleToTree(List<SysRole> sysRoleList, List<Long> roleIdList) {
         List<TreeNode> topNodeList = new ArrayList<>();
         for (SysRole sysRole: sysRoleList) {
             TreeNode treeNode = new TreeNode();
             treeNode.setText(sysRole.getName());
             treeNode.setId(sysRole.getId());
+            if (Validator.isNotNull(roleIdList)) {
+                if (roleIdList.contains(sysRole.getId())) {
+                    treeNode.toCheck();
+                }
+            }
             topNodeList.add(treeNode);
         }
         return topNodeList;
     }
 
-    public static void tree(Map<Long, List<SysResource>> nodeMap, TreeNode treeNode, SysResource sysResource) {
+    public static void tree(Map<Long, List<SysResource>> nodeMap, TreeNode treeNode, SysResource sysResource, List<Long> authorizedResourceIdList) {
         treeNode.setId(sysResource.getId());
         treeNode.setPid(sysResource.getPid());
         treeNode.setIcon(sysResource.getIcon());
@@ -156,7 +131,11 @@ public class EntityToVO {
         if (tempList != null) {
             for (SysResource subSysResource : tempList) {
                 TreeNode subNode = new TreeNode();
-                tree(nodeMap, subNode, subSysResource);
+                if (isAuthorized(subSysResource.getId(), authorizedResourceIdList)){
+                    subNode.toCheck();
+                }
+                subNode.toExpand();
+                tree(nodeMap, subNode, subSysResource, authorizedResourceIdList);
                 treeNode.addSubTreeNode(subNode);
             }
         }

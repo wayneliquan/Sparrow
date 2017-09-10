@@ -64,4 +64,26 @@
     INNER JOIN sys_resource ON role_resource.resource_id = sys_resource."id"
   </select>
 
+  <select id="findUserGrantedRoleIds" parameterType="java.lang.Long" resultType="java.lang.Long">
+    SELECT DISTINCT user_role.role_id
+    FROM user_role
+    WHERE user_role.user_id = #{sysUserId}
+  </select>
+
+  <select id="findResourceIdsByRoleId" parameterType="java.lang.Long" resultType="java.lang.Long">
+    SELECT DISTINCT role_resource.resource_id
+    FROM role_resource
+    WHERE role_resource.role_id = #{sysRoleId}
+  </select>
+
+  <delete id="deleteSysAuthorizationBySysRoleId" parameterType="java.lang.Long">
+    DELETE FROM user_role
+    WHERE user_role.user_id = #{sysUserId}
+  </delete>
+
+  <delete id="deletePermissionBySysRoleId" parameterType="java.lang.Long">
+    DELETE FROM role_resource
+    WHERE role_resource.role_id = #{sysRoleId}
+  </delete>
+
 </mapper>

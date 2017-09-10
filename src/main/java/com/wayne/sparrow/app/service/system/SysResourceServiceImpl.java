@@ -37,7 +37,10 @@ public class SysResourceServiceImpl implements SysResourceService {
     public void save(SysResource sysResource) {
         if (sysResource.getId() != null) {
             sysResource.setDateModify(new Date());
-//            sysResourceMapper.update(sysResource);
+            if (sysResource.getLevel() == null) {
+                sysResource.setLevel(getLevelByPid(sysResource.getPid()));
+            }
+            sysResourceMapper.update(sysResource);
         } else {
             if (sysResource.getPid() == null) {
                 sysResource.setPid(0L);

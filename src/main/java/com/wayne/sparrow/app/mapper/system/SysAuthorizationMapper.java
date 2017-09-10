@@ -29,4 +29,10 @@ public interface SysAuthorizationMapper {
     List<SysPermission> listAllPermission();
 
     List<Long> findResourceIdsByRoleId(Long sysRoleId);
+
+    List<Long> findUserGrantedRoleIds(Long sysUserId);
+
+    Integer deleteSysAuthorizationBySysRoleId(Long id);
+
+    Integer deletePermissionBySysRoleId(Long id);
 }

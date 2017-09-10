@@ -17,9 +17,11 @@ public interface SysAuthorizationService {
 
     void authorize(SysRole sysRole, List<SysResource> sysResourceList);
 
+    List<Long> findResourceIdsByRoleId(Long sysRoleId);
+
+    List<Long> findUserGrantedRoleIds(Long sysUserId);
+
     List<SysPermission> listAllPermission();
 
     void loadSysPermission(boolean reset);
-
-    List<Long> findResourceIdsByRoleId(Long sysRoleId);
 }

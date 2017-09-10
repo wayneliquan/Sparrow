@@ -42,7 +42,8 @@
         <label for="pname" class="col-lg-3 control-label">上级资源:</label>
         <div class="col-lg-5">
           <input type="hidden" name="pid" th:value="${sysResource?.pid}"/>
-          <input id="pname" type="text" class="form-control" style="background-color: white;" name="pname" onfocus="Panel.show();" readonly="true"/>
+          <input id="pname" name="pname" type="text" class="form-control" th:value="${sysResource?.pname}"
+                 style="background-color: white;" onfocus="Panel.show();" readonly="true"/>
           <div id="pResTree" style="display: none;"></div>
         </div>
       </div>
@@ -61,7 +62,7 @@
       <div class="form-group">
         <label class="col-lg-3 control-label"><span class="non-empty">*</span>Weight:</label>
         <div class="col-lg-5">
-          <input type="text" class="form-control" name="weight" th:value="${sysResource}? sysResource.weight:'0'"/>
+          <input type="text" class="form-control" name="weight" th:value="${sysResource}? ${sysResource.weight} :'0'"/>
         </div>
       </div>
 

@@ -5,7 +5,7 @@ import org.springframework.context.ApplicationContext;
 
 import java.util.Locale;
 
-public final class SpringContextUtil {
+public final class SpringContextUtils {
     private static ApplicationContext context;
 
     public static void cleanContext() {
@@ -31,6 +31,6 @@ public final class SpringContextUtil {
     }
 
     public static void setApplicationContext(ApplicationContext context) throws BeansException {
-        SpringContextUtil.context = context;
+        SpringContextUtils.context = context;
     }
 }

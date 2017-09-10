@@ -60,7 +60,8 @@ public class SysUserController extends BaseController {
     public String grantRole(Model model, Long sysUserId) {
         model.addAttribute("sysUserId", sysUserId);
         List<SysRole> sysRoleList = sysRoleService.listAll();
-        List<TreeNode> nodes = EntityToVO.sysRoleToTree(sysRoleList);
+        List<Long> roleIdList = sysAuthorizationService.findUserGrantedRoleIds(sysUserId);
+        List<TreeNode> nodes = EntityToVO.sysRoleToTree(sysRoleList, roleIdList);
         String roleData = JSON.toJSONString(nodes);
         model.addAttribute("roleData", roleData);
         return getModulePath() + "-grantRole";

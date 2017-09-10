@@ -24,14 +24,14 @@ public class TreeNode {
     private List<String> tags;// ['available'],
     private List<TreeNode> nodes;
 
-    public void check() {
+    public void toCheck() {
         if (state == null) {
             state = new State();
         }
         state.setChecked(true);
     }
 
-    public void expand() {
+    public void toExpand() {
         if (state == null) {
             state = new State();
         }

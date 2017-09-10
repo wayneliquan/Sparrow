@@ -6,11 +6,16 @@ import com.wayne.sparrow.app.entity.system.SysUser;
 import com.wayne.sparrow.app.mapper.system.SysAuthorizationMapper;
 import com.wayne.sparrow.app.pojo.SysAuthorization;
 import com.wayne.sparrow.app.pojo.SysPermission;
+import com.wayne.sparrow.app.pojo.SysUserDTO;
 import com.wayne.sparrow.core.constants.SysConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +27,10 @@ import java.util.List;
 public class SysAuthorizationServiceImpl implements SysAuthorizationService{
     @Autowired
     private SysAuthorizationMapper sysAuthorizationMapper;
+
+    @Autowired
+    @Qualifier("sessionRegistry")
+    private SessionRegistry sessionRegistry;
 
     // 给用户分配角色
     public void authorize(SysUser sysUser, List<SysRole> sysRoleList) {
@@ -35,7 +44,27 @@ public class SysAuthorizationServiceImpl implements SysAuthorizationService{
             sysAuthorization.setStatus(SysAuthorization.STATUS_NORMAL);
             list.add(sysAuthorization);
         }
+        sysAuthorizationMapper.deleteSysAuthorizationBySysRoleId(sysUser.getId());
         sysAuthorizationMapper.insertBathSysAuthorization(list);
+        // 如果用户已经登录，更新用户
+        // TODO 使用缓存做优化
+        List<Object> principalList = sessionRegistry.getAllPrincipals();
+        for (Object principal: principalList) {
+            if (principal instanceof SysUserDTO) {
+                SysUserDTO user = (SysUserDTO) principal;
+                String username = user.getUsername();
+                if (sysUser.getUsername().equals(username)) {
+                    Collection authorities = user.getAuthorities();
+                    synchronized (authorities) {
+                        // 更新授权, 比较太麻烦了，直接更新吧！
+                        authorities.clear();
+                        for (SysRole sysRole : sysRoleList) {
+                            authorities.add(new SimpleGrantedAuthority(sysRole.getCode()));
+                        }
+                    }
+                }
+            }
+        }
     }
 
     // 给角色分配资源
@@ -49,6 +78,7 @@ public class SysAuthorizationServiceImpl implements SysAuthorizationService{
             sysPermission.setDateCreated(new Date());
             list.add(sysPermission);
         }
+        sysAuthorizationMapper.deletePermissionBySysRoleId(sysRole.getId());
         sysAuthorizationMapper.insertBathSysPermission(list);
     }
 
@@ -66,6 +96,11 @@ public class SysAuthorizationServiceImpl implements SysAuthorizationService{
     @Override
     public List<Long> findResourceIdsByRoleId(Long sysRoleId) {
         return sysAuthorizationMapper.findResourceIdsByRoleId(sysRoleId);
+    }
+
+    @Override
+    public List<Long> findUserGrantedRoleIds(Long sysUserId) {
+        return sysAuthorizationMapper.findUserGrantedRoleIds(sysUserId);
     }
 
 }

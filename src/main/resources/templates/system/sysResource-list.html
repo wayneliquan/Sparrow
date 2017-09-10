@@ -52,6 +52,7 @@
         <td th:text="${resource.code}"></td>
         <td th:text="${resource.type}"></td>
         <td th:text="${resource.level}"></td>
+        <td th:text="${resource.pid}" style="display: none;"></td>
         <td th:text="${resource.pname}"></td>
 
         <td th:text="${resource.status}"></td>
@@ -60,7 +61,7 @@
         <td th:text="${#calendars.format(resource.dateCreated, 'yyyy-MM-dd HH:mm:ss')}"></td>
         <td>
           <div>
-            <a href='#' th:href="'/sysResource/input?userId=' + ${resource.id}">修改</a> |
+            <a href='#' th:href="'input?resourceId=' + ${resource.id}">修改</a> |
             <a href='#' th:onclick="'deleteById(' + ${resource.id} + '); return false;'">删除</a>
           </div>
         </td>
@@ -74,7 +75,7 @@
     function deleteById(deleteById) {
         var flag = confirm('确定删除该User?');
         if (flag) {
-            var url ='/sysResource/deleteById?resourceId=' + deleteById;
+            var url ='deleteById?resourceId=' + deleteById;
             $.get(url, function (data) {
                 if (data) {
                     alert(data.message);

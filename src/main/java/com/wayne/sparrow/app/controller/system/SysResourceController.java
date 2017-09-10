@@ -47,7 +47,7 @@ public class SysResourceController extends BaseController {
     public String list(Model model) {
         List<SysResource> sysResourceList = sysResourceService.listAll();
         model.addAttribute("sysResourceList", sysResourceList);
-
+        System.out.println(sysResourceList);
         return getModulePath() + "-list";
     }
 

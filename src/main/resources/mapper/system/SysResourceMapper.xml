@@ -67,4 +67,47 @@
     </foreach>
   </select>
 
+  <update id="update">
+    UPDATE sys_resource
+    <set>
+      <if test="pid != null">
+        pid = #{pid},
+      </if>
+      <if test="url != null">
+        url = #{url},
+      </if>
+      <if test="icon != null">
+        icon = #{icon}
+      </if>
+      <if test="weight != null">
+        weight = #{weight},
+      </if>
+      <if test="code != null">
+        code = #{code},
+      </if>
+      <if test="type != null">
+        type = #{type},
+      </if>
+      <if test="level != null">
+        level = #{level},
+      </if>
+      <if test="name != null">
+        name = #{name},
+      </if>
+      <if test="pname != null">
+        pname = #{pname},
+      </if>
+      <if test="status != null">
+        status = #{status},
+      </if>
+      <if test="uniqueCode != null">
+        unique_code = #{uniqueCode},
+      </if>
+      <if test="dateModify != null">
+        date_modify = #{dateModify},
+      </if>
+    </set>
+    WHERE id = #{id}
+  </update>
+
 </mapper>
