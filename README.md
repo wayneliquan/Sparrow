@@ -23,3 +23,9 @@
 
 # 用途：
   - ERP后台系统
+
+# 开发说明：
+  - druid使用：  
+    url: /druid/index.html  
+    username: admin  
+    password: 123456

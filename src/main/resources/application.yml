@@ -30,5 +30,8 @@ spring:
     test-on-borrow: false
     test-on-return: false
 
+    filters: stat,wall,log4j
+    connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=10000
+
     config-location: mybatis-config.xml
     mapper-path: mapper/**/**.xml
