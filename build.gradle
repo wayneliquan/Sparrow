@@ -60,6 +60,21 @@ dependencies {
     // google kaptcha 验证码
     compile('com.github.penggle:kaptcha:2.3.2')
 
+    // https://mvnrepository.com/artifact/com.foxinmy/weixin4j
+    compile group: 'com.foxinmy', name: 'weixin4j', version: '1.7.9', ext: 'pom'
+
+    //dom4j
+    // https://mvnrepository.com/artifact/dom4j/dom4j
+    compile('dom4j:dom4j:1.6.1')
+
+    // https://mvnrepository.com/artifact/com.thoughtworks.xstream/xstream
+    compile group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.10'
+
+    // jedis
+    compile group: 'redis.clients', name: 'jedis', version: '2.9.0'
+
+
+
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.security:spring-security-test')
 }
