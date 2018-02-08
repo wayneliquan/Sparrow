@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>省市县地址联动</title>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+<select id="province">
+    <option value="0">请选择</option>
+</select>
+
+<select id="city">
+    <option value="0">请选择</option>
+</select>
+
+<select id="county">
+    <option value="0">请选择</option>
+</select>
+<button onclick="showAddress()">获取地址</button>
+<script type="application/javascript">
+    showAddress = function () {
+        var p = $("#province");
+        paddress = p.val() + "-" + p.find("option:selected").text();
+        var c = $("#city");
+        caddress = c.val() + "-" + c.find("option:selected").text();
+        var x = $("#county");
+        xaddress = x.val() + "-" + x.find("option:selected").text();
+        alert(paddress + " " + caddress + " " + xaddress);
+    };
+    getOption = function (id, name) {
+        return "<option value='" + id + "'>" + name + "</option>";
+    };
+    clearOption = function($select) {
+        $select.html("");
+        $select.append("<option value=\"0\">请选择</option>");
+    };
+    addOption = function ($select, json){
+        for (var key in json) {
+            if (json.hasOwnProperty(key)){
+                var option = getOption(key, json[key].name);
+                $select.append(option);
+            }
+        }
+    };
+
+    var a1 = {1:{
+        "name":"北京",
+        "subArea": {
+            11:{"name":"城市1","subArea":{3:{"name":"县1"},4:{"name":"县2"}}},
+            12:{"name":"城市2","subArea":{5:{"name":"县1"},6:{"name":"县2"}}}
+        }
+    }};
+
+    var a2 = {14:{
+        "name":"福建省",
+        "subArea": {
+            11: {"name": "城市1", "subArea": {8: {"name": "县1"}, 9: {"name": "县2"}}},
+            12: {"name": "城市2", "subArea": {5: {"name": "县1"}, 6: {"name": "县2"}}}
+        }
+    }};
+
+    var a3 = {};
+    var key = Object.keys(a1)[0];
+    alert(key);
+    console.log(a1);
+    a3[key] = a1[key];
+    key = Object.keys(a2)[0];
+    a3[key] = a2[key];
+    console.log(a3);
+
+    var area = {
+        "1": {"name":"省1", "subArea":{"10": {"name":"市0", "subArea":{"100": {"name":"县0"}, "101": {"name":"县1"}}}, "11": {"name":"市1", "subArea":{"100": {"name":"县0"}, "101": {"name":"县1"}}}}},
+        "2": {"name":"省2", "subArea":{"10": {"name":"市0", "subArea":{"100": {"name":"县0"}, "101": {"name":"县1"}}}, "11": {"name":"市1", "subArea":{"100": {"name":"县0"}, "101": {"name":"县1"}}}}}
+    };
+    $(function () {
+        // 设置省
+        var province = $("#province");
+        clearOption(province);
+        addOption(province, area);
+        province.change(function(){
+            // 设置城市集合
+            var city = $("#city");
+            clearOption(city);
+            clearOption($("#county"));
+            addOption(city, area[this.value].subArea);
+        });
+
+        $("#city").change(function(){
+            // 设置县集合
+            var p = $("#province").val();
+            var c = $("#city").val();
+            var county = $("#county");
+            clearOption(county);
+            addOption(county, area[p].subArea[c].subArea);
+        });
+    });
+
+</script>
+</body>
+</html>
