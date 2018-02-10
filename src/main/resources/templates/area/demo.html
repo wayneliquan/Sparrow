@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>省市县地址联动DEMO</title>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+<select id="province" onchange="initNextArea(this.value, 'city')">
+    <option value="0">请选择</option>
+</select>
+
+<select id="city" onchange="initNextArea(this.value, 'county')">
+    <option value="0">请选择</option>
+</select>
+
+<select id="county">
+    <option value="0">请选择</option>
+</select>
+<button onclick="showAddress()">获取地址</button>
+<script src="../../static/js/area/area.js" th:src="@{/js/area/area.js}"></script>
+<script type="application/javascript">
+    showAddress = function () {
+        var p = $("#province");
+        var paddress = p.val() + "-" + p.find("option:selected").text();
+        var c = $("#city");
+        var caddress = c.val() + "-" + c.find("option:selected").text();
+        var x = $("#county");
+        var xaddress = x.val() + "-" + x.find("option:selected").text();
+        alert(paddress + " " + caddress + " " + xaddress);
+    };
+    startArea('/sparrow/area/getById', 0, 'province');
+</script>
+</body>
+</html>
