@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>省市县地址联动</title>
@@ -18,14 +18,25 @@
     <option value="0">请选择</option>
 </select>
 <button onclick="showAddress()">获取地址</button>
+<select id="test" onchange="initArea(this.value, 'test2')">
+    <option value="0">请选择</option>
+    <option value="1">请选择1</option>
+    <option value="2">请选择2</option>
+</select>
+
+<select id="test2" onchange="initArea(this.value)">
+    <option value="3">请选择3</option>
+    <option value="4">请选择4</option>
+</select>
+<script src="../../static/js/area/area.js" th:src="@{/js/area/area.js}"></script>
 <script type="application/javascript">
     showAddress = function () {
         var p = $("#province");
-        paddress = p.val() + "-" + p.find("option:selected").text();
+        var paddress = p.val() + "-" + p.find("option:selected").text();
         var c = $("#city");
-        caddress = c.val() + "-" + c.find("option:selected").text();
+        var caddress = c.val() + "-" + c.find("option:selected").text();
         var x = $("#county");
-        xaddress = x.val() + "-" + x.find("option:selected").text();
+        var xaddress = x.val() + "-" + x.find("option:selected").text();
         alert(paddress + " " + caddress + " " + xaddress);
     };
     getOption = function (id, name) {
@@ -35,45 +46,88 @@
         $select.html("");
         $select.append("<option value=\"0\">请选择</option>");
     };
+    /**
+     json = [
+        {"id":1,"name":"省1","subArea":[xx]},
+        {"id":2,"name":"省2","subArea":[xx]}
+     ]
+     */
     addOption = function ($select, json){
-        for (var key in json) {
-            if (json.hasOwnProperty(key)){
-                var option = getOption(key, json[key].name);
-                $select.append(option);
+        console.log(json);
+        for (var i in json) {
+            var option = getOption(json[i].id, json[i].name);
+            $select.append(option);
+        }
+    };
+
+    getNextAreaData = function (id, callback) {
+        $.get("/sparrow/area/getById?"+"id="+id, function (data) {
+            if (data !== null) {
+                console.log(data);
+                return data;
+            }
+        });
+    };
+    var tempId = null;
+    initArea = function(id, next) {
+        if (typeof(next) !== 'undefined' && next !== ''){
+            alert(id +"" + next);
+            tempId = id;
+            $.get("/sparrow/area/getById?"+"id="+id, function (data) {
+                if (data !== null && id === tempId) {
+                    console.log(data);
+                    var $select = $('#' + next);
+                    clearOption($select);
+                    addOption($select, data.subArea);
+                }
+            });
+        }
+    };
+
+    var areaList = [
+        {"id":1,"name":"省1","subArea":[{"id":11,"name":"市11","subArea":[{"id":100,"name":"县100"},{"id":200,"name":"县200"}]},{"id":12,"name":"市12","subArea":[{"id":100,"name":"县100"},{"id":200,"name":"县200"}]}]},
+        {"id":2,"name":"省2","subArea":[{"id":11,"name":"市21","subArea":[{"id":100,"name":"县200"},{"id":200,"name":"县201"}]},{"id":22,"name":"市12","subArea":[{"id":202,"name":"县100"},{"id":203,"name":"县200"}]}]}
+    ];
+    console.log(areaList);
+    for(var i in areaList) {
+//        alert(i);
+//        alert(areaList.hasOwnProperty(i));
+        alert(areaList[i].id);
+    }
+    var tempProvince;
+    var tempCity;
+    getAreaById = function (areas, id) {
+        for(var a in areas) {
+            if (areas.hasOwnProperty(a) && areas[a].id == id) {
+                return areas[a];
             }
         }
     };
 
-    var a1 = {1:{
-        "name":"北京",
-        "subArea": {
-            11:{"name":"城市1","subArea":{3:{"name":"县1"},4:{"name":"县2"}}},
-            12:{"name":"城市2","subArea":{5:{"name":"县1"},6:{"name":"县2"}}}
-        }
-    }};
-
-    var a2 = {14:{
-        "name":"福建省",
-        "subArea": {
-            11: {"name": "城市1", "subArea": {8: {"name": "县1"}, 9: {"name": "县2"}}},
-            12: {"name": "城市2", "subArea": {5: {"name": "县1"}, 6: {"name": "县2"}}}
-        }
-    }};
-
-    var a3 = {};
-    var key = Object.keys(a1)[0];
-    alert(key);
-    console.log(a1);
-    a3[key] = a1[key];
-    key = Object.keys(a2)[0];
-    a3[key] = a2[key];
-    console.log(a3);
-
-    var area = {
-        "1": {"name":"省1", "subArea":{"10": {"name":"市0", "subArea":{"100": {"name":"县0"}, "101": {"name":"县1"}}}, "11": {"name":"市1", "subArea":{"100": {"name":"县0"}, "101": {"name":"县1"}}}}},
-        "2": {"name":"省2", "subArea":{"10": {"name":"市0", "subArea":{"100": {"name":"县0"}, "101": {"name":"县1"}}}, "11": {"name":"市1", "subArea":{"100": {"name":"县0"}, "101": {"name":"县1"}}}}}
-    };
     $(function () {
+        // 设置省
+        var province = $("#province");
+        clearOption(province);
+        addOption(province, areaList);
+        province.change(function(){
+            // 设置城市集合
+            var city = $("#city");
+            clearOption(city);
+            clearOption($("#county"));
+            tempProvince = getAreaById(areaList, this.value);
+            addOption(city, tempProvince.subArea);
+        });
+
+        $("#city").change(function(){
+            // 设置县集合
+            var county = $("#county");
+            clearOption(county);
+            tempCity = getAreaById(tempProvince.subArea, this.value);
+            addOption(county, tempCity.subArea);
+        });
+    });
+
+    /*$(function () {
         // 设置省
         var province = $("#province");
         clearOption(province);
@@ -94,7 +148,7 @@
             clearOption(county);
             addOption(county, area[p].subArea[c].subArea);
         });
-    });
+    });*/
 
 </script>
 </body>

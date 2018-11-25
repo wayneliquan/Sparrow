@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" content="text/html; charset=utf-8" />
+    <title>新增任务</title>
+    <script type="text/javascript" src="../../static/js/jquery/jquery-3.2.1.min.js"
+            th:src="@{/js/jquery/jquery-3.2.1.min.js}"></script>
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="../../static/css/bootstrap/bootstrap.min.css"
+          th:href="@{/css/bootstrap/bootstrap.min.css}" />
+</head>
+<body>
+<div>
+    <form id="ff" action="startTask.html" method="post">
+        <label>选择应用</label>
+        <div th:each="apkInfo, stat:${apkInfoList}">
+            <input class="apkInfo" type="checkbox" name="apkInfoIds" th:value="${apkInfo.apkInfoId}"/>
+            <label th:text="${apkInfo.apkName}"></label>
+        </div>
+        <hr>
+        <label>选择手机</label>
+        <div th:each="deviceInfo, stat:${deviceInfoList}">
+            <input class="deviceInfo" type="checkbox" name="deviceInfoUuids" th:value="${deviceInfo.uuid}"/>
+            <label th:text="${deviceInfo.brand}"></label>
+            <label th:text="${deviceInfo.model}"></label>
+            <label th:text="${deviceInfo.name}"></label>
+            <label th:text="${deviceInfo.widthPixels}"></label>x<label th:text="${deviceInfo.heightPixels}"></label>
+        </div>
+        <hr>
+        <div>
+            <button type="submit" class="btn btn-default">启动阅读</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

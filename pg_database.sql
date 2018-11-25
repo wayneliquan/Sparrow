@@ -68,6 +68,22 @@ CREATE TABLE role_resource
   CONSTRAINT role_resource_pkey PRIMARY KEY (id)
 );
 
+DROP TABLE IF EXISTS area;
+CREATE TABLE area
+(
+  area_id      BIGSERIAL NOT NULL,
+  code         CHARACTER VARYING(10),
+  name         CHARACTER VARYING(30),
+  level        INTEGER,
+  sort         INTEGER,
+  postal_code  CHARACTER VARYING(10),
+  area_pid     BIGINT,
+  status       SMALLINT,
+  date_modify  TIMESTAMP(3) WITHOUT TIME ZONE,
+  date_created TIMESTAMP(3) WITHOUT TIME ZONE DEFAULT now(),
+  CONSTRAINT area_pkey PRIMARY KEY (area_id)
+);
+
 -- sys_user 插入需要保证 id为1,2
 INSERT INTO "sys_user" ("username", "password", "nickname", "status") VALUES ('admin', '21232f297a57a5a743894a0e4a801fc3', '管理员', '0');
 INSERT INTO "sys_user" ("username", "password", "nickname", "status") VALUES ('user', '202cb962ac59075b964b07152d234b70', NULL, '0');
@@ -117,5 +133,52 @@ VALUES
 ('3', '1'),
 ('3', '8');
 
+
+
+DROP TABLE IF EXISTS apk_info;
+CREATE TABLE apk_info
+(
+  apk_info_id   BIGSERIAL NOT NULL,
+  apk_name CHARACTER VARYING(100),
+  package_name CHARACTER VARYING(100),
+  version_name CHARACTER VARYING(30),
+  download_url CHARACTER VARYING(8000),
+  file_id  BIGINT,
+  date_modify  TIMESTAMP(3) WITHOUT TIME ZONE,
+  date_created TIMESTAMP(3) WITHOUT TIME ZONE DEFAULT now(),
+  CONSTRAINT apk_info_pk PRIMARY KEY (apk_info_id)
+);
+
+
+DROP TABLE IF EXISTS device_info;
+CREATE TABLE device_info
+(
+  device_info_id   BIGSERIAL NOT NULL,
+  uuid CHARACTER VARYING(40),
+  serialno CHARACTER VARYING(100),
+  name CHARACTER VARYING(30),
+  brand CHARACTER VARYING(8000),
+  model  BIGINT,
+  sdk INTEGER,
+  release  CHARACTER VARYING(100),
+  width_pixels  INTEGER,
+  height_pixels INTEGER,
+  date_modify  TIMESTAMP(3) WITHOUT TIME ZONE,
+  date_created TIMESTAMP(3) WITHOUT TIME ZONE DEFAULT now(),
+  CONSTRAINT device_info_pk PRIMARY KEY (device_info_id)
+);
+
+DROP TABLE IF EXISTS autoread_script;
+CREATE TABLE autoread_script
+(
+  autoread_script_id   BIGSERIAL NOT NULL,
+  apk_info_id BIGINT,
+  width_pixels  INTEGER,
+  height_pixels INTEGER,
+  script CHARACTER VARYING(8000),
+  date_modify  TIMESTAMP(3) WITHOUT TIME ZONE,
+  date_created TIMESTAMP(3) WITHOUT TIME ZONE DEFAULT now(),
+  CONSTRAINT autoread_script_pk PRIMARY KEY (autoread_script_id)
+);
 
 

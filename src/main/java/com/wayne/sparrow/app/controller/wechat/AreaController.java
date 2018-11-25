@@ -1,7 +1,9 @@
 package com.wayne.sparrow.app.controller.wechat;
 
+import com.wayne.sparrow.app.mapper.area.AreaMapper;
 import com.wayne.sparrow.core.common.bojo.area.Area;
 import com.wayne.sparrow.core.common.controller.BaseController;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,6 +15,9 @@ import java.util.List;
 @Controller
 @RequestMapping("/area")
 public class AreaController extends BaseController{
+
+    @Autowired
+    private AreaMapper areaMapper;
 
     @RequestMapping("/demo")
     public String test() {
@@ -44,6 +49,13 @@ public class AreaController extends BaseController{
 //                xArea.add(x);
 //            }
         }
+        return p;
+    }
+
+    @RequestMapping("/findById")
+    @ResponseBody
+    public Area findById(@RequestParam(name = "id", defaultValue = "0") Long id) {
+        Area p = areaMapper.findTreeById(id);
         return p;
     }
 }

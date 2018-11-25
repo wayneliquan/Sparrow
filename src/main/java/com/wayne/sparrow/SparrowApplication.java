@@ -1,5 +1,7 @@
 package com.wayne.sparrow;
 
+import com.wayne.sparrow.app.mina.MinaSessionManager;
+import com.wayne.sparrow.app.service.task.AutoReadTaskManager;
 import com.wayne.sparrow.core.constants.SysConstants;
 import com.wayne.sparrow.core.util.SpringContextUtils;
 import org.springframework.boot.SpringApplication;
@@ -29,5 +31,11 @@ class AppStartListener implements ApplicationListener<ApplicationReadyEvent> {
     public void onApplicationEvent(ApplicationReadyEvent event) {
         SpringContextUtils.setApplicationContext(event.getApplicationContext());
         new SysConstants().init();
+        MinaSessionManager minaSessionManager = SpringContextUtils.getBean(MinaSessionManager.class);
+        AutoReadTaskManager taskManager = SpringContextUtils.getBean(AutoReadTaskManager.class);
+        taskManager.init();
+        System.out.println("start MINA Server");
+        minaSessionManager.startService();
+        System.out.println("end MINA Server");
     }
 }

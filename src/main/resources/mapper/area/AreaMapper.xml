@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wayne.sparrow.app.mapper.area.AreaMapper">
+    <resultMap id="BaseResultMap" type="com.wayne.sparrow.core.common.bojo.area.Area">
+        <id column="area_id" jdbcType="BIGINT" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="level" jdbcType="INTEGER" property="level"/>
+        <result column="sort" jdbcType="INTEGER" property="sort"/>
+        <result column="area_pid" jdbcType="BIGINT" property="pid"/>
+        <collection property="subArea" ofType="com.wayne.sparrow.core.common.bojo.area.Area"
+                    column="area_id" javaType="java.util.ArrayList" select="selectSubArea"/>
+    </resultMap>
+    <resultMap id="SubResultMap" type="com.wayne.sparrow.core.common.bojo.area.Area">
+        <id column="area_id" jdbcType="BIGINT" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="level" jdbcType="INTEGER" property="level"/>
+        <result column="sort" jdbcType="INTEGER" property="sort"/>
+        <result column="area_pid" jdbcType="BIGINT" property="pid"/>
+        <collection property="subArea" ofType="com.wayne.sparrow.core.common.bojo.area.Area"
+                    column="area_id" javaType="java.util.ArrayList" select="selectSubArea"/>
+    </resultMap>
+
+    <sql id="table_name">
+        area
+    </sql>
+    <sql id="Base_Column_List">
+        area_id, code, "name", "level", "sort", area_pid
+    </sql>
+
+    <select id="findById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where area_id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="findTreeById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where area_id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectSubArea" parameterType="java.lang.Long" resultMap="SubResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        WHERE area_pid = #{area_id}
+    </select>
+</mapper>

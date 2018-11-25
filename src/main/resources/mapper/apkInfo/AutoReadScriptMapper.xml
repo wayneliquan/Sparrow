@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wayne.sparrow.app.mapper.autoread.AutoReadScriptMapper">
+    <resultMap id="BaseResultMap" type="com.wayne.sparrow.app.pojo.AutoReadScript">
+        <id column="apk_info_id" jdbcType="BIGINT" property="apkInfoId"/>
+        <result column="apk_name" jdbcType="VARCHAR" property="apkName"/>
+        <result column="package_name" jdbcType="VARCHAR" property="packageName"/>
+        <result column="version_name" jdbcType="VARCHAR" property="versionName"/>
+        <result column="download_url" jdbcType="VARCHAR" property="downloadUrl"/>
+        <result column="file_id" jdbcType="BIGINT" property="fileId"/>
+    </resultMap>
+
+    <select id="getScript" resultType="java.lang.String">
+        select script
+        from autoread_script
+        where apk_info_id = #{arg0} and width_pixels = #{arg1} and height_pixels = #{arg2}
+    </select>
+</mapper>

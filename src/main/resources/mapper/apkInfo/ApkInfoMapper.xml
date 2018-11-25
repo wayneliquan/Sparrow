@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wayne.sparrow.app.mapper.apkinfo.ApkInfoMapper">
+    <resultMap id="BaseResultMap" type="com.wayne.sparrow.app.pojo.ApkInfo">
+        <id column="apk_info_id" jdbcType="BIGINT" property="apkInfoId"/>
+        <result column="apk_name" jdbcType="VARCHAR" property="apkName"/>
+        <result column="package_name" jdbcType="VARCHAR" property="packageName"/>
+        <result column="version_name" jdbcType="VARCHAR" property="versionName"/>
+        <result column="download_url" jdbcType="VARCHAR" property="downloadUrl"/>
+        <result column="file_id" jdbcType="BIGINT" property="fileId"/>
+    </resultMap>
+
+    <sql id="table_name">
+        apk_info
+    </sql>
+    <sql id="Base_Column_List">
+        apk_info_id,
+        apk_name,
+        package_name,
+        version_name,
+        download_url,
+        file_id,
+        date_modify,
+        date_created
+    </sql>
+
+    <select id="listTargetApk" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+    </select>
+
+    <select id="getApkInfoById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="table_name"/>
+        where apk_info_id = #{arg0}
+    </select>
+</mapper>

@@ -1,3 +1,9 @@
 server:
   port: 9999
   context-path: /sparrow
+#spring:
+#  profiles:
+#    active: dev
+spring:
+  thymeleaf:
+    cache: false

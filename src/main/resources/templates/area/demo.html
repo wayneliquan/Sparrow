@@ -6,11 +6,11 @@
     <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
-<select id="province" onchange="initNextArea(this.value, 'city')">
+<select id="province">
     <option value="0">请选择</option>
 </select>
 
-<select id="city" onchange="initNextArea(this.value, 'county')">
+<select id="city">
     <option value="0">请选择</option>
 </select>
 
@@ -29,7 +29,9 @@
         var xaddress = x.val() + "-" + x.find("option:selected").text();
         alert(paddress + " " + caddress + " " + xaddress);
     };
-    startArea('/sparrow/area/getById', 0, 'province');
+
+    nodeList = ['province', 'city', 'county'];
+    startArea('/sparrow/area/getById', 0, nodeList);
 </script>
 </body>
 </html>

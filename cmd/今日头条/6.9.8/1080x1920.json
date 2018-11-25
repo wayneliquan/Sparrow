@@ -1,0 +1,18 @@
+{
+  "maxX": 1080,
+  "minY": 300,
+  "maxY": 1600,
+  "readCount": 5,
+  "startCmd": "am start -n com.ss.android.article.news/.activity.MainActivity -a android.intent.action.MAIN -c android.intent.category.LAUNCHER",
+  "preCmd": "input tap 400 280",
+  "BianLiYeMian": {
+    "y": 400,
+    "count": 3,
+    "stepLen": 300
+  },
+  "refreshCmd": "input swipe 300 500 300 1000 300",
+  "readCmd": "input swipe 500 1300 500 600 200",
+  "backCmd": "input tap 60 150"
+}
+
+
